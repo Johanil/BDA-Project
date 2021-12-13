@@ -1,3 +1,4 @@
 #Ignore all sqlite files
 *.sqlite
 *.csv
+*.xlsx
