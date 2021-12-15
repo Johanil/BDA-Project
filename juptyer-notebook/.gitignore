@@ -1,0 +1,6 @@
+#Ignore all sqlite files
+*.sqlite
+*.xlsx
+*.csv
+sweden.html
+.ipynb_checkpoints
