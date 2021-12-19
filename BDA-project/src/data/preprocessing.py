@@ -1,64 +1,93 @@
 import pandas as pd
+import numpy as np
+from datetime import datetime, date
 from sweref99 import projections
+from preprocess_convert import preprocess_converters
+#from preprocess_convert import preprocess_convert
 
-class PreProcess():
+def _filter_rows_by_values(df, column, keep_values):
+    return df[df[column].isin(keep_values)]
+
+def _sum_columns(df, columns, new_column_name):
+    df[new_column_name] = df[columns].sum(axis=1)
+    return df
+
+
+
+class PreProcessRisk:
     
-    df = pd.Dataframe
-    tm = projections.make_transverse_mercator("SWEREF_99_TM")
-    #def main(input_filepath):
+    @staticmethod
+    def process_dataframe(dataset=None):
         
-    #Function which sums up the values of the columns into a new column and returns the dataframe
-    def sum_columns(df, columns, new_column_name):
-        df[new_column_name] = df[columns].sum(axis=1)
+        if type(dataset) != pd.core.frame.DataFrame:
+            dataset = pd.DataFrame()
+            
+        else:
+            PreProcessRisk.dataset = dataset
 
-        return df
+        # Initializing instances of the smaller profile DF and the larger DF
+        PreProcessRisk.dataset = PreProcessRisk.dataset.drop(columns=['Nederbord',
+       'RH', 'Vindhastighet', 'Vindriktning', 'FFMC', 'DMC', 'DC', 'ISI',
+       'BUI', 'HBV_o', 'HBV_u', 'HBV', 'HBV_index', 'Tmedel','Temp',
+       'Gras','E','N'])
+        tm = projections.make_transverse_mercator("SWEREF_99_TM")
+        pc = preprocess_converters()
+        PreProcessRisk.dataset.dropna(subset=['FWI'], how='all', inplace=True)
+        PreProcessRisk.dataset['FWI'] = PreProcessRisk.dataset['FWI'].str.replace(',','.')
+        PreProcessRisk.dataset['FWI'] = PreProcessRisk.dataset['FWI'].astype(float)
+        PreProcessRisk.dataset['Kommun'] = PreProcessRisk.dataset['Kommun'].astype(int)
+        PreProcessRisk.dataset['Datum'] = pd.to_datetime(PreProcessRisk.dataset['Datum'], format='%Y-%m-%d')
+        PreProcessRisk.dataset = PreProcessRisk.dataset.groupby(['Datum','Kommun']).mean()
+        PreProcessRisk.dataset = PreProcessRisk.dataset.reset_index()
+        PreProcessRisk.dataset = PreProcessRisk.dataset.rename(columns={"Datum": "Date", "Kommun":"Municipality"})
+        return PreProcessRisk.dataset
 
-    def sum_columns(df, columns, new_column_name):
-        df[new_column_name] = df[columns].sum(axis=1)
+    @staticmethod
+    def _sum_columns(dataset, columns, new_column_name):
+        dataset[new_column_name] = dataset[columns].sum(axis=1)
 
-        return df
-
-    def filter_rows_by_values(df, column, keep_values):
-        #Replace ~ with - try if it works
-        return df[df[column].isin(keep_values)]
-
-    def print_null_values(df):
-        for column in df:
-            if df[column].isnull().any():
-                print('{0} has {1} null values'.format(column, df[column].isnull().sum()))
-
-    def print_column_missing_values(df,column):
-        x = len(df)
-        if df[column].isnull().any():
-            print('{0} has total of {1} null values'.format(column, df[column].isnull().sum()))
-            print ('In the column {0}'.format(column), round(100-(df[column].count()/x * 100), 3), '% of the cells have missing values')
-    
-        #Functions for converting easting and northing to latitudes and longitudes.
-        #Exampl: sample['Latitude'] = sample.apply(lambda row: toLat(row['sweref99Ost'],row['sweref99Norr']),axis=1)
-    def convert_to_lat(E,N):
-        lat, lon = tm.grid_to_geodetic(N,E)
-        return lat
-
-    def convert_to_lon(E,N):
-        lat, lon = tm.grid_to_geodetic(N,E)
-        return lon
-
-    def convert_swereff99_column(df, column):
-        return df
-
-
-    def convert_columns_totype(df,columns,type):
+        return dataset
+    @staticmethod
+    def _column_value_replace(dataset,columns,to_replace,replace_with):
         for column in columns:
-            df[column] = df[column].astype(type)
+            dataset[column] = dataset[column].str.replace(to_replace,replace_with)
+        return dataset
+    @staticmethod
+    def _format_date_column(dataset,column,format_value):
+        dataset[column] = pd.to_datetime(dataset[column], format=format_value)
+
+class PreProcessReported():
+    @staticmethod
+    def process_dataframe(dataset):
+        if type(dataset) != pd.core.frame.DataFrame:
+            dataset = pd.DataFrame()
+        else:
+            dataset = dataset
+        dataset = _filter_rows_by_values(dataset,'BEJBbrandorsakText',['Grillning eller lägereld'])
+        dataset = _sum_columns(dataset,['arealProduktivSkogsmark_m2','arealAnnanTradbevuxenMark_m2','arealMarkUtanTrad_m2'],'TotArea')
+        dataset['Hectares'] = dataset['TotArea']/10000
+        dataset = dataset.drop(columns=['tid','sweref99Ost','sweref99Norr','verksamhetText','arealProduktivSkogsmark_m2','arealAnnanTradbevuxenMark_m2','arealMarkUtanTrad_m2','BEJBbrandorsakText'])
+        dataset['Month'] = dataset['datum'].dt.month
+        dataset['Day'] = dataset['datum'].dt.day
+        dataset = dataset.rename(columns={"datum":"Date", "kommun":"Municipality"})
+        return dataset
+class PreProcessMerge():
+
+    @staticmethod
+    def process_dataframe(risk_dataset=None, fires_dataset=None):
+            # Initializing instances of the smaller profile DF and the larger DF
+        if type(fires_dataset) != pd.core.frame.DataFrame:
+            fires_dataset = pd.DataFrame()
+        else:
+            fires_dataset = fires_dataset
+        if type(risk_dataset) != pd.core.frame.DataFrame:
+            risk_dataset = pd.DataFrame() 
+        else:
+            risk_dataset = risk_dataset
+
+        df = pd.merge(fires_dataset, risk_dataset, how='inner', on=['Municipality','Date'])
+        df = df.rename(columns={ "datum":"Date", "kommun":"Municipality_name","BEJBbrandorsakText":"Cause_of_fire","kommunKortNamn":"Municipality_name","ar":"Year"})
+        
+        df = df[df['FWI_index']>=4]
         return df
 
-    def column_value_replace(df,columns,to_replace,replace_with):
-        for column in columns:
-            df[column] = df[column].str.replace(to_replace,replace_with)
-        return df
-
-    def format_date_column(df,column,format_value):
-        df[column] = pd.to_datetime(df[column], format=format_value)
-
-
-    
