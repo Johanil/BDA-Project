@@ -11,15 +11,14 @@ from folium import plugins
 from selenium import webdriver
 from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.display import display, clear_output
-
+import os
+current_directory = os.getcwd()
 
 def main():
-    path = Path(r"F:\Code\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
+    path = Path(current_directory+r"\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
     df = pd.read_csv(path)
-    print(df)
     plt.rcParams["figure.figsize"] = (18,8)
     month_year = pd.DataFrame(columns=['fires','Sum'])
-   
     month_year['Month'] = df['Month']
     month_year['Year'] = df['Year']
     month_year['Date'] = df['Date']
@@ -32,7 +31,6 @@ def main():
     month_year = month_year.sort_values(by=['Year','Month'])
     logger = logging.getLogger(__name__)
     logger.info('Creating plots')
-    print(df)
     create_fires_month_year_lineplot(month_year)
     df = df.reset_index()
     fires_day_month = pd.DataFrame(columns=['month_name','Sum'])
@@ -42,7 +40,9 @@ def main():
     fires_day_month['month_name'] = fires_day_month['Month'].apply(lambda x: month_labels[x])
     fires_day_month['Date'] = pd.to_datetime({'year':fires_day_month['Year'],'month': fires_day_month['Month'],'day':fires_day_month['Day']})
     tablesplit = fires_day_month.set_index(['Date'])
+    #FutureWarning at this row
     pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
+    #FutureWarning at this row
     pre2019['year_group'] = '2000-2018'
     post2018 = tablesplit.loc['2019-1-1' : '2020-12-31']
     post2018['year_group'] = '2019-2020 '
@@ -50,7 +50,7 @@ def main():
     fires_day_month_v2 = pd.concat([pre2019,post2018])
     fires_day_month_v2= fires_day_month_v2.reset_index()
     fires_day_month_v2 = fires_day_month_v2.sort_values(by='Date')
-    fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(7).mean()
+    fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
     create_fires_yday_lineplot(fires_day_month_v2)
     create_fires_yday_rol7_mean_grouped(fires_day_month_v2)
 
@@ -62,26 +62,26 @@ def create_fires_month_year_lineplot(df):
     line.set_xticks([4,5,6,7,8,9,10])
     line.set_xticklabels(month_labels)
     line.legend(loc='center right')
-    path = Path(r"F:\Code\BDA-Project\BDA-project\reports\figures\fires_month_year_lineplot")
+    path = Path(current_directory+r"\BDA-project\data\processed\fires_month_year_lineplot")
     plt.savefig(path)
 
 def create_fires_yday_lineplot(df):
 
     fig = df.groupby(['yday','Year']).sum().unstack()
     line = fig.plot(kind='line',y='Sum', stacked=True)
-    plt.xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
+    plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
     #line.set_xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
     #line.set_xticklabels(fires_month['Month'].values)
     line.legend(loc='center right')
-    path = Path(r"F:\Code\BDA-Project\BDA-project\reports\figures\fires_yday_lineplot")
+    path = Path(current_directory+r"\BDA-project\data\processed\fires_yday_lineplot")
     plt.savefig(path)
 
 def create_fires_yday_rol7_mean_grouped(df):
     fig = df.groupby(['yday','year_group']).median().unstack()
     line = fig.plot(kind='line',y='rol7', stacked=True)
-    plt.xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
+    plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
     line.legend(loc='center right')
-    path = Path(r"F:\Code\BDA-Project\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
+    path = Path(current_directory+r"\BDA-project\data\processed\fires_yday_rol7_mean_grouped")
     plt.savefig(path)
 
 if __name__ == '__main__':

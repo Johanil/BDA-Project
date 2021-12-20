@@ -6,13 +6,14 @@ import pandas as pd
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 from preprocessing import PreProcessMerge, PreProcessReported, PreProcessRisk
-
+import os
+current_directory = os.getcwd()
 #@click.command()
 #@click.argument('input_filepath', type=click.Path(exists=True))
 #@click.argument('output_filepath', type=click.Path())
 def main():
-    risk_path = Path(r"F:\Code\BDA-Project\BDA-project\data\raw\Brandriskdata 2000-2020.csv")
-    fire_path = Path(r"F:\Code\BDA-Project\BDA-project\data\raw\Insatser till brand i skog och mark 2000-2020.xlsx")
+    risk_path = Path(current_directory+r"\BDA-project\data\raw\Brandriskdata 2000-2020.csv")
+    fire_path = Path(current_directory+r"\BDA-project\data\raw\Insatser till brand i skog och mark 2000-2020.xlsx")
     types={ 'PunktID': str}
     df_risk_data = pd.read_csv(risk_path,sep=';', dtype=types,)
     df_fire_data = pd.read_excel(fire_path)

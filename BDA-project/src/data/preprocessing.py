@@ -74,7 +74,7 @@ class PreProcessReported():
 class PreProcessMerge():
 
     @staticmethod
-    def process_dataframe(risk_dataset=None, fires_dataset=None):
+    def process_dataframe(risk_dataset=None, fires_dataset=None, fwi_filter=-1):
             # Initializing instances of the smaller profile DF and the larger DF
         if type(fires_dataset) != pd.core.frame.DataFrame:
             fires_dataset = pd.DataFrame()
@@ -88,6 +88,6 @@ class PreProcessMerge():
         df = pd.merge(fires_dataset, risk_dataset, how='inner', on=['Municipality','Date'])
         df = df.rename(columns={ "datum":"Date", "kommun":"Municipality_name","BEJBbrandorsakText":"Cause_of_fire","kommunKortNamn":"Municipality_name","ar":"Year"})
         
-        df = df[df['FWI_index']>=4]
+        df = df[df['FWI_index']>=fwi_filter]
         return df
 
