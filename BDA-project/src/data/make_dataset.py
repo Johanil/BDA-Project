@@ -11,8 +11,8 @@ from preprocessing import PreProcessMerge, PreProcessReported, PreProcessRisk
 #@click.argument('input_filepath', type=click.Path(exists=True))
 #@click.argument('output_filepath', type=click.Path())
 def main():
-    risk_path = Path(r"F:\Code\BDA-Project\BDA-project\data\raw\Brandriskdata 2000-2020.csv")
-    fire_path = Path(r"F:\Code\BDA-Project\BDA-project\data\raw\Insatser till brand i skog och mark 2000-2020.xlsx")
+    risk_path = Path(r"C:\BDA-Project\BDA-project\data\raw\Brandriskdata 2000-2020.csv")
+    fire_path = Path(r"C:\BDA-Project\BDA-project\data\raw\Insatser till brand i skog och mark 2000-2020.xlsx")
     types={ 'PunktID': str}
     df_risk_data = pd.read_csv(risk_path,sep=';', dtype=types,)
     df_fire_data = pd.read_excel(fire_path)
@@ -27,7 +27,7 @@ def main():
     logger.info('making final data set from raw data')
     #output_path = Path(r"F:\Code\BDA-Project\BDA-project\data\processed")
     #file = Path(r"\FiresWithRisks.csv")
-    processed_merged.to_csv('F:\Code\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv')
+    processed_merged.to_csv('C:\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv')
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

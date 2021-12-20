@@ -14,7 +14,7 @@ from IPython.display import display, clear_output
 
 
 def main():
-    path = Path(r"F:\Code\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
+    path = Path(r"C:\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
     df = pd.read_csv(path)
     print(df)
     plt.rcParams["figure.figsize"] = (18,8)
@@ -62,7 +62,7 @@ def create_fires_month_year_lineplot(df):
     line.set_xticks([4,5,6,7,8,9,10])
     line.set_xticklabels(month_labels)
     line.legend(loc='center right')
-    path = Path(r"F:\Code\BDA-Project\BDA-project\reports\figures\fires_month_year_lineplot")
+    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fires_month_year_lineplot")
     plt.savefig(path)
 
 def create_fires_yday_lineplot(df):
@@ -73,7 +73,7 @@ def create_fires_yday_lineplot(df):
     #line.set_xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
     #line.set_xticklabels(fires_month['Month'].values)
     line.legend(loc='center right')
-    path = Path(r"F:\Code\BDA-Project\BDA-project\reports\figures\fires_yday_lineplot")
+    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fires_yday_lineplot")
     plt.savefig(path)
 
 def create_fires_yday_rol7_mean_grouped(df):
@@ -81,7 +81,7 @@ def create_fires_yday_rol7_mean_grouped(df):
     line = fig.plot(kind='line',y='rol7', stacked=True)
     plt.xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
     line.legend(loc='center right')
-    path = Path(r"F:\Code\BDA-Project\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
+    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
     plt.savefig(path)
 
 if __name__ == '__main__':
