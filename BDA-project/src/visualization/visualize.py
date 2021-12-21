@@ -102,7 +102,7 @@ if __name__ == '__main__':
     main()
 
 
-def fires_per_fwi4():
+def fires_per_fwi4(dataset1, dataset2, dataset3, dataset4):
     pre19riskPath = Path(r"C:\BDA-Project\BDA-project\data\processed\pre19fwi4Risk.csv")
     pre_risk= pd.read_csv(pre19riskPath)
     post18riskPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Risk.csv')
@@ -119,17 +119,22 @@ def fires_per_fwi4():
 
     fires_per_FWI4_pre = pre19FWI4Fires/pre19FWI4Count
     fires_per_FWI4_post = post18FWI4Fires/post18FWI4Count
+    print(fires_per_FWI4_pre)
 
     data = [[pre19FWI4Count, pre19FWI4Fires, fires_per_FWI4_pre],
             [post18FWI4Count, post18FWI4Fires, fires_per_FWI4_post]]
-    columns= ('Nr of FWI_index => 4', 'Nr of Fires during FWI_index => 4', 'Nr of fires per FWI_index => 4')
-    rows = ('2000-2018', '2019-2020')
-    table = plt.table(
-        cellText= data,
-        rowLabels= rows,
-        colLabels= columns
-        )
-    table.plt
- 
+    column_labels= ('Nr of FWI_index => 4', 'Nr of Fires during FWI_index => 4', 'Nr of fires per FWI_index => 4')
+    row_labels = ('2000-2018', '2019-2020')
+    ax = plt.subplots() 
+    ax.set_axis_off() 
+    ax.table( 
+        cellText = data,  
+        rowLabels = row_labels,  
+        colLabels = column_labels, 
+        rowColours =["palegreen"] * 10,  
+        colColours =["palegreen"] * 10, 
+        cellLoc ='center',  
+        loc ='upper left')         
+    
     path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
     plt.savefig(path)
