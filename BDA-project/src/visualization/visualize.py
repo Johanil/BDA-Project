@@ -13,9 +13,12 @@ from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.display import display, clear_output
 
 
+
 def main():
     path = Path(r"C:\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
     df = pd.read_csv(path)
+
+    
     print(df)
     plt.rcParams["figure.figsize"] = (18,8)
     month_year = pd.DataFrame(columns=['fires','Sum'])
@@ -84,6 +87,7 @@ def create_fires_yday_rol7_mean_grouped(df):
     path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
     plt.savefig(path)
 
+
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
@@ -96,3 +100,36 @@ if __name__ == '__main__':
     load_dotenv(find_dotenv())
 
     main()
+
+
+def fires_per_fwi4():
+    pre19riskPath = Path(r"C:\BDA-Project\BDA-project\data\processed\pre19fwi4Risk.csv")
+    pre_risk= pd.read_csv(pre19riskPath)
+    post18riskPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Risk.csv')
+    post_risk= pd.read_csv(post18riskPath)
+    pre19mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\pre19fwi4Merged.csv')
+    pre_merged= pd.read_csv(pre19mergedPath)
+    post18mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Merged.csv')
+    post_merged= pd.read_csv(post18mergedPath)
+
+    pre19FWI4Count = pre_risk.FWI_index.count()
+    post18FWI4Count = post_risk.FWI_index.count()
+    pre19FWI4Fires = pre_merged.FWI_index.count()
+    post18FWI4Fires = post_merged.FWI_index.count()
+
+    fires_per_FWI4_pre = pre19FWI4Fires/pre19FWI4Count
+    fires_per_FWI4_post = post18FWI4Fires/post18FWI4Count
+
+    data = [[pre19FWI4Count, pre19FWI4Fires, fires_per_FWI4_pre],
+            [post18FWI4Count, post18FWI4Fires, fires_per_FWI4_post]]
+    columns= ('Nr of FWI_index => 4', 'Nr of Fires during FWI_index => 4', 'Nr of fires per FWI_index => 4')
+    rows = ('2000-2018', '2019-2020')
+    table = plt.table(
+        cellText= data,
+        rowLabels= rows,
+        colLabels= columns
+        )
+    table.plt
+ 
+    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
+    plt.savefig(path)
