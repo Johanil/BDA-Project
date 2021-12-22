@@ -7,10 +7,12 @@ from pathlib import Path
 from datetime import datetime, date
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import xticks
+import matplotlib.transforms
 from folium import plugins
 from selenium import webdriver
 from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.display import display, clear_output
+from pandas.plotting import table
 
 
 
@@ -18,8 +20,6 @@ def main():
     path = Path(r"C:\BDA-Project\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
     df = pd.read_csv(path)
 
-    
-    print(df)
     plt.rcParams["figure.figsize"] = (18,8)
     month_year = pd.DataFrame(columns=['fires','Sum'])
    
@@ -35,7 +35,6 @@ def main():
     month_year = month_year.sort_values(by=['Year','Month'])
     logger = logging.getLogger(__name__)
     logger.info('Creating plots')
-    print(df)
     create_fires_month_year_lineplot(month_year)
     df = df.reset_index()
     fires_day_month = pd.DataFrame(columns=['month_name','Sum'])
@@ -56,6 +55,7 @@ def main():
     fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(7).mean()
     create_fires_yday_lineplot(fires_day_month_v2)
     create_fires_yday_rol7_mean_grouped(fires_day_month_v2)
+    fires_per_fwi4()
 
 #Seems to be working, result needs to be double checked! Values only from april to august. Reasonable? All are FWI >=4
 def create_fires_month_year_lineplot(df):
@@ -87,6 +87,46 @@ def create_fires_yday_rol7_mean_grouped(df):
     path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
     plt.savefig(path)
 
+def fires_per_fwi4() :
+    pre19riskPath = Path(r"C:\BDA-Project\BDA-project\data\processed\pre19fwi4Risk.csv")
+    pre_risk= pd.read_csv(pre19riskPath)
+    post18riskPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Risk.csv')
+    post_risk= pd.read_csv(post18riskPath)
+    pre19mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\pre19fwi4Merged.csv')
+    pre_merged= pd.read_csv(pre19mergedPath)
+    post18mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Merged.csv')
+    post_merged= pd.read_csv(post18mergedPath)
+    pre19FWI4Count = pre_risk.FWI_index.count()
+    post18FWI4Count = post_risk.FWI_index.count()
+    pre19FWI4Fires = pre_merged.FWI_index.count()
+    post18FWI4Fires = post_merged.FWI_index.count()
+
+    fires_per_FWI4_pre = pre19FWI4Fires/pre19FWI4Count
+    fires_per_FWI4_post = post18FWI4Fires/post18FWI4Count
+    
+
+    data = {'Period': ['2000-2018', '2019-2020'], 'FWI_index => 4' : [pre19FWI4Count, post18FWI4Count], 'Fires during FWI_index => 4': [pre19FWI4Fires, post18FWI4Fires], 'Fires per FWI_index => 4' : [fires_per_FWI4_pre, fires_per_FWI4_post]}
+    firesPerFWIdf = pd.DataFrame(data)
+   
+    ax = plt.subplot(111, frame_on=False) # no visible frame
+    ax.xaxis.set_visible(False)  # hide the x axis
+    ax.yaxis.set_visible(False)  # hide the y axis
+
+    table(ax, firesPerFWIdf, loc='center')
+
+    # draw canvas once
+    plt.gcf().canvas.draw()
+    # get bounding box of table
+    points = ax.get_window_extent(plt.gcf()._cachedRenderer).get_points()
+    # add 10 pixel spacing
+    points[0,:] -= 10; points[1,:] += 10
+    # get new bounding box in inches
+    nbbox = matplotlib.transforms.Bbox.from_extents(points/plt.gcf().dpi)
+  
+    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
+    
+    plt.savefig(path, bbox_inches=nbbox)
+
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -102,39 +142,19 @@ if __name__ == '__main__':
     main()
 
 
-def fires_per_fwi4(dataset1, dataset2, dataset3, dataset4):
-    pre19riskPath = Path(r"C:\BDA-Project\BDA-project\data\processed\pre19fwi4Risk.csv")
-    pre_risk= pd.read_csv(pre19riskPath)
-    post18riskPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Risk.csv')
-    post_risk= pd.read_csv(post18riskPath)
-    pre19mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\pre19fwi4Merged.csv')
-    pre_merged= pd.read_csv(pre19mergedPath)
-    post18mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Merged.csv')
-    post_merged= pd.read_csv(post18mergedPath)
 
-    pre19FWI4Count = pre_risk.FWI_index.count()
-    post18FWI4Count = post_risk.FWI_index.count()
-    pre19FWI4Fires = pre_merged.FWI_index.count()
-    post18FWI4Fires = post_merged.FWI_index.count()
-
-    fires_per_FWI4_pre = pre19FWI4Fires/pre19FWI4Count
-    fires_per_FWI4_post = post18FWI4Fires/post18FWI4Count
-    print(fires_per_FWI4_pre)
-
-    data = [[pre19FWI4Count, pre19FWI4Fires, fires_per_FWI4_pre],
-            [post18FWI4Count, post18FWI4Fires, fires_per_FWI4_post]]
-    column_labels= ('Nr of FWI_index => 4', 'Nr of Fires during FWI_index => 4', 'Nr of fires per FWI_index => 4')
-    row_labels = ('2000-2018', '2019-2020')
-    ax = plt.subplots() 
-    ax.set_axis_off() 
-    ax.table( 
-        cellText = data,  
-        rowLabels = row_labels,  
-        colLabels = column_labels, 
-        rowColours =["palegreen"] * 10,  
-        colColours =["palegreen"] * 10, 
-        cellLoc ='center',  
-        loc ='upper left')         
+    #column_labels= ('Nr of FWI_index => 4', 'Nr of Fires during FWI_index => 4', 'Nr of fires per FWI_index => 4')
+    #row_labels = ('2000-2018', '2019-2020')
+    #ax = plt.subplots() 
+    #ax.set_axis_off() 
+    #ax.table( 
+     #   cellText = data,  
+      #  rowLabels = row_labels,  
+       # colLabels = column_labels, 
+       # rowColours =["palegreen"] * 10,  
+        #colColours =["palegreen"] * 10, 
+        #cellLoc ='center',  
+        #loc ='upper left')         
     
-    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
-    plt.savefig(path)
+    #path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
+    #plt.savefig(path)
