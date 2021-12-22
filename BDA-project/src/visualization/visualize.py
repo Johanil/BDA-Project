@@ -96,16 +96,40 @@ def fires_per_fwi4() :
     pre_merged= pd.read_csv(pre19mergedPath)
     post18mergedPath= Path(r'C:\BDA-Project\BDA-project\data\processed\post18fwi4Merged.csv')
     post_merged= pd.read_csv(post18mergedPath)
+    risk2018Path = Path(r"C:\BDA-Project\BDA-project\data\processed\risk2018.csv")
+    risk18= pd.read_csv(risk2018Path)
+    risk2019Path = Path(r"C:\BDA-Project\BDA-project\data\processed\risk2019.csv")
+    risk19= pd.read_csv(risk2019Path)
+    risk2020Path = Path(r"C:\BDA-Project\BDA-project\data\processed\risk2020.csv")
+    risk20= pd.read_csv(risk2020Path)
+    merged2018Path= Path(r'C:\BDA-Project\BDA-project\data\processed\2018merged.csv')
+    merged18= pd.read_csv(merged2018Path)
+    merged2019Path= Path(r'C:\BDA-Project\BDA-project\data\processed\2019merged.csv')
+    merged19= pd.read_csv(merged2019Path)
+    merged2020Path= Path(r'C:\BDA-Project\BDA-project\data\processed\2020merged.csv')
+    merged20= pd.read_csv(merged2020Path)
+
     pre19FWI4Count = pre_risk.FWI_index.count()
     post18FWI4Count = post_risk.FWI_index.count()
+    fwi4_18_count = risk18.FWI_index.count()
+    fwi4_19_count = risk19.FWI_index.count()
+    fwi4_20_count = risk20.FWI_index.count()
     pre19FWI4Fires = pre_merged.FWI_index.count()
     post18FWI4Fires = post_merged.FWI_index.count()
+    fwi4_18_fires_count = merged18.FWI_index.count()
+    fwi4_19_fires_count = merged19.FWI_index.count()
+    fwi4_20_fires_count = merged20.FWI_index.count()
 
     fires_per_FWI4_pre = pre19FWI4Fires/pre19FWI4Count
     fires_per_FWI4_post = post18FWI4Fires/post18FWI4Count
-    
+    fires_per_FWI4_18 = fwi4_18_fires_count/fwi4_18_count
+    fires_per_FWI4_19 = fwi4_19_fires_count/fwi4_19_count
+    fires_per_FWI4_20 = fwi4_20_fires_count/fwi4_20_count
 
-    data = {'Period': ['2000-2018', '2019-2020'], 'FWI_index => 4' : [pre19FWI4Count, post18FWI4Count], 'Fires during FWI_index => 4': [pre19FWI4Fires, post18FWI4Fires], 'Fires per FWI_index => 4' : [fires_per_FWI4_pre, fires_per_FWI4_post]}
+    data = {'Period': ['2000-2018', '2019-2020', '2018', '2019', '2020'], 
+    'FWI_index => 4' : [pre19FWI4Count, post18FWI4Count, fwi4_18_count, fwi4_19_count, fwi4_20_count],
+     'Fires during FWI_index => 4': [pre19FWI4Fires, post18FWI4Fires, fwi4_18_fires_count, fwi4_19_fires_count, fwi4_20_fires_count],
+      'Fires per FWI_index => 4' : [fires_per_FWI4_pre, fires_per_FWI4_post, fires_per_FWI4_18, fires_per_FWI4_19, fires_per_FWI4_20]}
     firesPerFWIdf = pd.DataFrame(data)
    
     ax = plt.subplot(111, frame_on=False) # no visible frame
