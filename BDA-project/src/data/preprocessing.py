@@ -43,6 +43,22 @@ class PreProcessRisk:
         return PreProcessRisk.dataset
 
     @staticmethod
+    def process_dataframe_fwi4_days(df):
+        
+        #Creates table from the firerisktable grouped on the columns Datum and Kommun, with the median, giving us the median values of FWI_index for each Kommun and each day
+        totalfwi4 = df.groupby(['Date','Municipality']).median()
+        totalfwi4 = df.reset_index()
+        # Gives us table with for all the times FWI_index was => 4 (eldningsförbud)
+        above4risk = totalfwi4[totalfwi4['FWI_index']>=4]
+        above4risk = above4risk.set_index(['Date'])
+        pre2019risk = above4risk.loc['2000-1-1':'2018-12-31']
+        post2018risk = above4risk.loc['2019-1-1' : '2020-12-31']
+        risk2018 = above4risk.loc['2018-1-1' : '2018-12-31']
+        risk2019 = above4risk.loc['2019-1-1' : '2019-12-31']
+        risk2020 = above4risk.loc['2020-1-1' : '2029-12-31']
+        return pre2019risk, post2018risk, risk2018, risk2019, risk2020
+
+    @staticmethod
     def _sum_columns(dataset, columns, new_column_name):
         dataset[new_column_name] = dataset[columns].sum(axis=1)
 
@@ -71,6 +87,8 @@ class PreProcessReported():
         dataset['Day'] = dataset['datum'].dt.day
         dataset = dataset.rename(columns={"datum":"Date", "kommun":"Municipality"})
         return dataset
+
+    
 class PreProcessMerge():
 
     @staticmethod
@@ -91,3 +109,14 @@ class PreProcessMerge():
         df = df[df['FWI_index']>=fwi_filter]
         return df
 
+    @staticmethod
+    def process_dataframe_fwi4_days(dataset=None):
+        dataset['Date'] = pd.to_datetime({'year':dataset['Year'],'month': dataset['Month'],'day':dataset['Day']})
+        tablesplit = dataset.set_index(['Date'])
+        pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
+        post2018 = tablesplit.loc['2019-1-1' : '2020-12-31']
+        fires2018 = tablesplit.loc['2018-1-1' : '2018-12-31']
+        fires2019 = tablesplit.loc['2019-1-1' : '2019-12-31']
+        fires2020 = tablesplit.loc['2020-1-1' : '2020-12-31']
+
+        return pre2019, post2018, fires2018, fires2019, fires2020
