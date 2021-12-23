@@ -1,7 +1,0 @@
-#Ignore all sqlite files
-*.sqlite
-*.xlsx
-*.csv
-sweden.html
-AllReportedFires.html
-.ipynb_checkpoints
