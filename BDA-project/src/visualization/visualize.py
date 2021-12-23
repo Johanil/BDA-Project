@@ -34,7 +34,6 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info('Creating plots')
     create_fires_month_year_lineplot(month_year)
-    df = df.reset_index()
     fires_day_month = pd.DataFrame(columns=['month_name','Sum'])
     fires_day_month['Sum'] = month_year.value_counts(['Year','Day','Month']).to_frame()
     fires_day_month = fires_day_month.reset_index()
@@ -129,15 +128,11 @@ def create_fires_yday_rol7_mean_grouped(df):
     plt.savefig(path)
 
 def create_fires_muni_map(df, filename="muni_fire"):
-    #df['Municipality_name'] = df['Municipality_name'].replace('Malung','Malung-Sälen')
     map = folium.Map(location = [59.334591, 18.063240],
                zoom_start = 5.45)
-    
-
     path = Path(current_directory+r"\BDA-project\data\raw\sweden-municipalities-topo.json")
     with open(path,encoding='utf-8') as f:
         muni_topo = json.load(f)
-
     pd.set_option('display.max_rows', df.shape[0]+1)
     #Create Choropleth with data from allyears dataframe.
     folium.Choropleth(geo_data=muni_topo,
