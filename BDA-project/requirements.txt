@@ -1,0 +1,23 @@
+# local package
+-e .
+
+# external requirements
+click
+Sphinx
+coverage
+awscli
+flake8
+python-dotenv
+numpy
+pandas
+#N,E conversions
+sweref99
+#Plotting
+matplotlib.pyplot
+#Map
+IPython.display 
+ipywidgets
+folium
+selenium
+#Models
+sklearn
