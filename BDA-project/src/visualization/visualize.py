@@ -42,6 +42,7 @@ def main():
     fires_day_month['month_name'] = fires_day_month['Month'].apply(lambda x: month_labels[x])
     fires_day_month['Date'] = pd.to_datetime({'year':fires_day_month['Year'],'month': fires_day_month['Month'],'day':fires_day_month['Day']})
     fires_day_month['yday'] = fires_day_month['Date'].dt.dayofyear
+    fires_day_month['Week'] = fires_day_month['Date'].dt.week
     tablesplit = fires_day_month.set_index(['Date'])
     #FutureWarning at this row
     pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
@@ -55,6 +56,7 @@ def main():
     fires_day_month_v2 = fires_day_month_v2.sort_values(by='Date')
     fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
     create_fires_yday_lineplot(fires_day_month_v2)
+    create_fires_week_lineplot(fires_day_month_v2)
     create_fires_yday_rol7_mean_grouped(fires_day_month_v2)
     fire_muni = df
     fire_muni = fire_muni[['Date','Municipality_name']]
@@ -71,7 +73,8 @@ def main():
     allyears = allyears.assign(fires=1)
     fire_muni_pre2019 = fire_muni_pre2019.assign(fires=1)
     fire_muni_post2018 = fire_muni_post2018.assign(fires=1)
-    allyears= allyears.groupby(allyears['Municipality_name']).sum()
+    allyears['Municipality_name'] = allyears['Municipality_name'].replace('Malung','Malung-Sälen')
+    allyears = allyears.groupby(allyears['Municipality_name']).sum()
     allyears= allyears.reset_index()
     fire_muni_pre2019= fire_muni_pre2019.groupby(fire_muni_pre2019['Municipality_name']).sum()
     fire_muni_pre2019= fire_muni_pre2019.reset_index()
@@ -80,7 +83,7 @@ def main():
     create_fires_muni_map(allyears)
     create_fires_muni_map(fire_muni_pre2019, "\muni_fire_pre2019.html")
     create_fires_muni_map(fire_muni_post2018,"\muni_fire_post2018.html")
- 
+    
     fires_per_fwi4()
 
 #Seems to be working, result needs to be double checked! Values only from april to august. Reasonable? All are FWI >=4
@@ -105,10 +108,22 @@ def create_fires_yday_lineplot(df):
     path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_lineplot")
     plt.savefig(path)
 
+def create_fires_week_lineplot(df):
+    
+    fig = df.groupby(['Week','Year']).sum().unstack()
+    line = fig.plot(kind='line',y='Sum', stacked=True)
+    #plt.xticks(np.linspace(0,52,53)[:-1])#, ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
+    #line.set_xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
+    #line.set_xticklabels(fires_month['Month'].values)
+    line.legend(loc='center right')
+    path = Path(current_directory+r"\BDA-project\reports\figures\fires_week_lineplot")
+    plt.savefig(path)
+
+
 def create_fires_yday_rol7_mean_grouped(df):
-    fig = df.groupby(['yday','year_group']).median().unstack()
+    fig = df.groupby(['Week','year_group']).median().unstack()
     line = fig.plot(kind='line',y='rol7', stacked=True)
-    plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
+    #plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
     line.legend(loc='center right')
     path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
     plt.savefig(path)
@@ -117,10 +132,13 @@ def create_fires_muni_map(df, filename="muni_fire"):
     #df['Municipality_name'] = df['Municipality_name'].replace('Malung','Malung-Sälen')
     map = folium.Map(location = [59.334591, 18.063240],
                zoom_start = 5.45)
+    
 
     path = Path(current_directory+r"\BDA-project\data\raw\sweden-municipalities-topo.json")
     with open(path,encoding='utf-8') as f:
         muni_topo = json.load(f)
+
+    pd.set_option('display.max_rows', df.shape[0]+1)
     #Create Choropleth with data from allyears dataframe.
     folium.Choropleth(geo_data=muni_topo,
     topojson='objects.SWE_adm2',
@@ -131,15 +149,15 @@ def create_fires_muni_map(df, filename="muni_fire"):
     fill_opacity=0.9, 
     line_opacity=0.5,
     legend_name="Number of reported fires",
-    threshold_scale=[1,2,4,8,16,32,64,128,256,512]
+    #threshold_scale=[1,2,4,8,16,32,64,128,256,512,1024]
     ).add_to(map)
     map.save(current_directory+r"\BDA-project\reports\figures"+filename)
     #map.save('./data/AllReportedFires.html')
-    path = Path(current_directory+r"\BDA-project\figures\fires_yday_rol7_mean_grouped")
+    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
     plt.savefig(path)
 
-def fires_per_fwi4() :
-    pre19riskPath = Path(current_directory+r"\BDA-project\data\pre19fwi4Risk.csv")
+def fires_per_fwi4():
+    pre19riskPath = Path(current_directory+r"\BDA-project\data\processed\pre19fwi4Risk.csv")
     pre_risk= pd.read_csv(pre19riskPath)
     post18riskPath= Path(current_directory+r"\BDA-project\data\processed\post18fwi4Risk.csv")
     post_risk= pd.read_csv(post18riskPath)
@@ -147,11 +165,11 @@ def fires_per_fwi4() :
     pre_merged= pd.read_csv(pre19mergedPath)
     post18mergedPath= Path(current_directory+r"\BDA-project\data\processed\post18fwi4Merged.csv")
     post_merged= pd.read_csv(post18mergedPath)
-    risk2018Path = Path(current_directory+r"\BDA-project\data\risk2018.csv")
+    risk2018Path = Path(current_directory+r"\BDA-project\data\processed\risk2018.csv")
     risk18= pd.read_csv(risk2018Path)
-    risk2019Path = Path(current_directory+r"\BDA-project\data\risk2019.csv")
+    risk2019Path = Path(current_directory+r"\BDA-project\data\processed\risk2019.csv")
     risk19= pd.read_csv(risk2019Path)
-    risk2020Path = Path(current_directory+r"\BDA-project\data\risk2020.csv")
+    risk2020Path = Path(current_directory+r"\BDA-project\data\processed\risk2020.csv")
     risk20= pd.read_csv(risk2020Path)
     merged2018Path= Path(current_directory+r"\BDA-project\data\processed\2018merged.csv")
     merged18= pd.read_csv(merged2018Path)
@@ -187,9 +205,6 @@ def fires_per_fwi4() :
     ax.xaxis.set_visible(False)  # hide the x axis
     ax.yaxis.set_visible(False)  # hide the y axis
 
-    #Vad är detta? Saknas det något?
-    table(ax, firesPerFWIdf, loc='center')
-
     # draw canvas once
     plt.gcf().canvas.draw()
     # get bounding box of table
@@ -199,7 +214,7 @@ def fires_per_fwi4() :
     # get new bounding box in inches
     nbbox = matplotlib.transforms.Bbox.from_extents(points/plt.gcf().dpi)
   
-    path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
+    path = Path(current_directory+r"\BDA-project\reports\figures\fwi4table")
     
     plt.savefig(path, bbox_inches=nbbox)
 
@@ -216,21 +231,3 @@ if __name__ == '__main__':
     load_dotenv(find_dotenv())
 
     main()
-
-
-
-    #column_labels= ('Nr of FWI_index => 4', 'Nr of Fires during FWI_index => 4', 'Nr of fires per FWI_index => 4')
-    #row_labels = ('2000-2018', '2019-2020')
-    #ax = plt.subplots() 
-    #ax.set_axis_off() 
-    #ax.table( 
-     #   cellText = data,  
-      #  rowLabels = row_labels,  
-       # colLabels = column_labels, 
-       # rowColours =["palegreen"] * 10,  
-        #colColours =["palegreen"] * 10, 
-        #cellLoc ='center',  
-        #loc ='upper left')         
-    
-    #path = Path(r"C:\BDA-Project\BDA-project\reports\figures\fwi4table")
-    #plt.savefig(path)
