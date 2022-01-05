@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime, date
-from sweref99 import projections
-from preprocess_convert import preprocess_converters
-#from preprocess_convert import preprocess_convert
 
 def _filter_rows_by_values(df, column, keep_values):
     return df[df[column].isin(keep_values)]
@@ -30,8 +27,6 @@ class PreProcessRisk:
        'RH', 'Vindhastighet', 'Vindriktning', 'FFMC', 'DMC', 'DC', 'ISI',
        'BUI', 'HBV_o', 'HBV_u', 'HBV', 'HBV_index', 'Tmedel','Temp',
        'Gras','E','N'])
-        tm = projections.make_transverse_mercator("SWEREF_99_TM")
-        pc = preprocess_converters()
         PreProcessRisk.dataset.dropna(subset=['FWI'], how='all', inplace=True)
         PreProcessRisk.dataset['FWI'] = PreProcessRisk.dataset['FWI'].str.replace(',','.')
         PreProcessRisk.dataset['FWI'] = PreProcessRisk.dataset['FWI'].astype(float)

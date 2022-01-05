@@ -132,6 +132,8 @@ def create_fires_yday_rol7_mean_grouped(df):
 
 def create_fires_muni_map(df, filename="muni_fire"):
     df['Municipality_name'] = df['Municipality_name'].replace('Malung','Malung-Sälen')
+    map = folium.Map(location = [59.334591, 18.063240],
+               zoom_start = 5.45)
     path = Path(current_directory+r"\BDA-project\data\raw\sweden-municipalities-topo.json")
     with open(path,encoding='utf-8') as f:
         muni_topo = json.load(f)
