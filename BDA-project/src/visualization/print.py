@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 class Print():
 
@@ -20,3 +21,11 @@ class Print():
             print('{0} has total of {1} null values'.format(column, self.dataset[column].isnull().sum()))
             print ('In the column {0}'.format(column), round(100-(self.dataset[column].count()/x * 100), 3), '% of the cells have missing values')
     
+    def print_NAME_2_values_topojson(path):
+        indx = []
+        with open(path,encoding='utf-8') as json_file:
+            data = json.load(json_file)
+            obj = data['objects']
+            for righe in obj["SWE_adm2"]['geometries']:
+                print(righe['properties']['NAME_2'])
+                indx.append(righe['properties']['NAME_2'])
