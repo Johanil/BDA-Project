@@ -51,6 +51,7 @@ class PreProcessRisk:
         # Gives us table with for all the times FWI_index was => 4 (eldningsförbud)
         above4risk = totalfwi4[totalfwi4['FWI_index']>=4]
         above4risk = above4risk.set_index(['Date'])
+        pre2018risk = above4risk.loc['2000-1-1':'2017-12-31']
         pre2019risk = above4risk.loc['2000-1-1':'2018-12-31']
         post2018risk = above4risk.loc['2019-1-1' : '2020-12-31']
         risk2000 = above4risk.loc['2000-1-1' : '2000-12-31']
@@ -74,7 +75,7 @@ class PreProcessRisk:
         risk2018 = above4risk.loc['2018-1-1' : '2018-12-31']
         risk2019 = above4risk.loc['2019-1-1' : '2019-12-31']
         risk2020 = above4risk.loc['2020-1-1' : '2029-12-31']
-        return pre2019risk, post2018risk,risk2000, risk2001, risk2002, risk2003, risk2004, risk2005, risk2006, risk2007, risk2008, risk2009, risk2010, risk2011, risk2012, risk2013, risk2014, risk2015, risk2016, risk2017, risk2018, risk2019, risk2020
+        return pre2018risk, pre2019risk, post2018risk,risk2000, risk2001, risk2002, risk2003, risk2004, risk2005, risk2006, risk2007, risk2008, risk2009, risk2010, risk2011, risk2012, risk2013, risk2014, risk2015, risk2016, risk2017, risk2018, risk2019, risk2020
 
     @staticmethod
     def _sum_columns(dataset, columns, new_column_name):
@@ -131,6 +132,7 @@ class PreProcessMerge():
     def process_dataframe_fwi4_days(dataset=None):
         dataset['Date'] = pd.to_datetime({'year':dataset['Year'],'month': dataset['Month'],'day':dataset['Day']})
         tablesplit = dataset.set_index(['Date'])
+        pre2018 = tablesplit.loc['2000-1-1':'2017-12-31']
         pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
         post2018 = tablesplit.loc['2019-1-1' : '2020-12-31']
         fires2000 = tablesplit.loc['2000-1-1' : '2000-12-31']
@@ -155,4 +157,4 @@ class PreProcessMerge():
         fires2019 = tablesplit.loc['2019-1-1' : '2019-12-31']
         fires2020 = tablesplit.loc['2020-1-1' : '2020-12-31']
 
-        return pre2019, post2018, fires2000, fires2001, fires2002, fires2003, fires2004, fires2005, fires2006, fires2007, fires2008, fires2009, fires2010, fires2011, fires2012, fires2013, fires2014, fires2015, fires2016, fires2017, fires2018, fires2019, fires2020
+        return pre2018, pre2019, post2018, fires2000, fires2001, fires2002, fires2003, fires2004, fires2005, fires2006, fires2007, fires2008, fires2009, fires2010, fires2011, fires2012, fires2013, fires2014, fires2015, fires2016, fires2017, fires2018, fires2019, fires2020
