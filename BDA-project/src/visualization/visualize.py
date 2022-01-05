@@ -354,6 +354,21 @@ def fires_per_fwi4():
     plt.savefig(path)
 
 
+def fires_and_visitors():
+
+    risk2018Path = Path(current_directory+r"\BDA-project\data\processed\risk2018.csv")
+    risk18= pd.read_csv(risk2018Path)
+    risk2019Path = Path(current_directory+r"\BDA-project\data\processed\risk2019.csv")
+    risk19= pd.read_csv(risk2019Path)
+    risk2020Path = Path(current_directory+r"\BDA-project\data\processed\risk2020.csv")
+    risk20= pd.read_csv(risk2020Path)
+    merged2018Path= Path(current_directory+r"\BDA-project\data\processed\2018merged.csv")
+    merged18= pd.read_csv(merged2018Path)
+    merged2019Path= Path(current_directory+r"\BDA-project\data\processed\2019merged.csv")
+    merged19= pd.read_csv(merged2019Path)
+    merged2020Path= Path(current_directory+r"\BDA-project\data\processed\2020merged.csv")
+    merged20= pd.read_csv(merged2020Path)
+
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
