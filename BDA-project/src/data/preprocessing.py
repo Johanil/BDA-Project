@@ -53,10 +53,28 @@ class PreProcessRisk:
         above4risk = above4risk.set_index(['Date'])
         pre2019risk = above4risk.loc['2000-1-1':'2018-12-31']
         post2018risk = above4risk.loc['2019-1-1' : '2020-12-31']
+        risk2000 = above4risk.loc['2000-1-1' : '2000-12-31']
+        risk2001 = above4risk.loc['2001-1-1' : '2001-12-31']
+        risk2002 = above4risk.loc['2002-1-1' : '2002-12-31']
+        risk2003 = above4risk.loc['2003-1-1' : '2003-12-31']
+        risk2004 = above4risk.loc['2004-1-1' : '2004-12-31']
+        risk2005 = above4risk.loc['2005-1-1' : '2005-12-31']
+        risk2006 = above4risk.loc['2006-1-1' : '2006-12-31']
+        risk2007 = above4risk.loc['2007-1-1' : '2007-12-31']
+        risk2008 = above4risk.loc['2008-1-1' : '2008-12-31']
+        risk2009 = above4risk.loc['2009-1-1' : '2009-12-31']
+        risk2010 = above4risk.loc['2010-1-1' : '2010-12-31']
+        risk2011 = above4risk.loc['2011-1-1' : '2011-12-31']
+        risk2012 = above4risk.loc['2012-1-1' : '2012-12-31']
+        risk2013 = above4risk.loc['2013-1-1' : '2013-12-31']
+        risk2014 = above4risk.loc['2014-1-1' : '2014-12-31']
+        risk2015 = above4risk.loc['2015-1-1' : '2015-12-31']
+        risk2016 = above4risk.loc['2016-1-1' : '2016-12-31']
+        risk2017 = above4risk.loc['2017-1-1' : '2017-12-31']
         risk2018 = above4risk.loc['2018-1-1' : '2018-12-31']
         risk2019 = above4risk.loc['2019-1-1' : '2019-12-31']
         risk2020 = above4risk.loc['2020-1-1' : '2029-12-31']
-        return pre2019risk, post2018risk, risk2018, risk2019, risk2020
+        return pre2019risk, post2018risk,risk2000, risk2001, risk2002, risk2003, risk2004, risk2005, risk2006, risk2007, risk2008, risk2009, risk2010, risk2011, risk2012, risk2013, risk2014, risk2015, risk2016, risk2017, risk2018, risk2019, risk2020
 
     @staticmethod
     def _sum_columns(dataset, columns, new_column_name):
@@ -115,8 +133,26 @@ class PreProcessMerge():
         tablesplit = dataset.set_index(['Date'])
         pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
         post2018 = tablesplit.loc['2019-1-1' : '2020-12-31']
+        fires2000 = tablesplit.loc['2000-1-1' : '2000-12-31']
+        fires2001 = tablesplit.loc['2001-1-1' : '2001-12-31']
+        fires2002 = tablesplit.loc['2002-1-1' : '2002-12-31']
+        fires2003 = tablesplit.loc['2003-1-1' : '2003-12-31']
+        fires2004 = tablesplit.loc['2004-1-1' : '2004-12-31']
+        fires2005 = tablesplit.loc['2005-1-1' : '2005-12-31']
+        fires2006 = tablesplit.loc['2006-1-1' : '2006-12-31']
+        fires2007 = tablesplit.loc['2007-1-1' : '2007-12-31']
+        fires2008 = tablesplit.loc['2008-1-1' : '2008-12-31']
+        fires2009 = tablesplit.loc['2009-1-1' : '2009-12-31']
+        fires2010 = tablesplit.loc['2010-1-1' : '2010-12-31']
+        fires2011 = tablesplit.loc['2011-1-1' : '2011-12-31']
+        fires2012 = tablesplit.loc['2012-1-1' : '2012-12-31']
+        fires2013 = tablesplit.loc['2013-1-1' : '2013-12-31']
+        fires2014 = tablesplit.loc['2014-1-1' : '2014-12-31']
+        fires2015 = tablesplit.loc['2015-1-1' : '2015-12-31']
+        fires2016 = tablesplit.loc['2016-1-1' : '2016-12-31']
+        fires2017 = tablesplit.loc['2017-1-1' : '2017-12-31']
         fires2018 = tablesplit.loc['2018-1-1' : '2018-12-31']
         fires2019 = tablesplit.loc['2019-1-1' : '2019-12-31']
         fires2020 = tablesplit.loc['2020-1-1' : '2020-12-31']
 
-        return pre2019, post2018, fires2018, fires2019, fires2020
+        return pre2019, post2018, fires2000, fires2001, fires2002, fires2003, fires2004, fires2005, fires2006, fires2007, fires2008, fires2009, fires2010, fires2011, fires2012, fires2013, fires2014, fires2015, fires2016, fires2017, fires2018, fires2019, fires2020
