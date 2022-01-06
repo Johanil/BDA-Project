@@ -171,10 +171,14 @@ def create_fires_muni_map(df, filename="muni_fire"):
     plt.savefig(path)
 
 def fires_per_fwi4():
+    pre18riskPath = Path(current_directory+r"\BDA-project\data\processed\pre18fwi4Risk.csv")
+    pre18risk= pd.read_csv(pre18riskPath)
     pre19riskPath = Path(current_directory+r"\BDA-project\data\processed\pre19fwi4Risk.csv")
     pre_risk= pd.read_csv(pre19riskPath)
     post18riskPath= Path(current_directory+r"\BDA-project\data\processed\post18fwi4Risk.csv")
     post_risk= pd.read_csv(post18riskPath)
+    pre18mergedPath= Path(current_directory+r"\BDA-project\data\processed\pre18fwi4Merged.csv")
+    pre18merged= pd.read_csv(pre18mergedPath)
     pre19mergedPath= Path(current_directory+r"\BDA-project\data\processed\pre19fwi4Merged.csv")
     pre_merged= pd.read_csv(pre19mergedPath)
     post18mergedPath= Path(current_directory+r"\BDA-project\data\processed\post18fwi4Merged.csv")
@@ -264,6 +268,7 @@ def fires_per_fwi4():
     merged2020Path= Path(current_directory+r"\BDA-project\data\processed\2020merged.csv")
     merged20= pd.read_csv(merged2020Path)
 
+    pre18FWI4Count = pre18risk.FWI_index.count()
     pre19FWI4Count = pre_risk.FWI_index.count()
     post18FWI4Count = post_risk.FWI_index.count()
     fwi4_00_count = risk00.FWI_index.count()
@@ -287,6 +292,7 @@ def fires_per_fwi4():
     fwi4_18_count = risk18.FWI_index.count()
     fwi4_19_count = risk19.FWI_index.count()
     fwi4_20_count = risk20.FWI_index.count()
+    pre18FWI4Fires = pre18merged.FWI_index.count()
     pre19FWI4Fires = pre_merged.FWI_index.count()
     post18FWI4Fires = post_merged.FWI_index.count()
     fwi4_00_fires_count = merged00.FWI_index.count()
@@ -311,6 +317,7 @@ def fires_per_fwi4():
     fwi4_19_fires_count = merged19.FWI_index.count()
     fwi4_20_fires_count = merged20.FWI_index.count()
 
+    fires_per_FWI4_pre_18 = pre18FWI4Fires/pre18FWI4Count
     fires_per_FWI4_pre = pre19FWI4Fires/pre19FWI4Count
     fires_per_FWI4_post = post18FWI4Fires/post18FWI4Count
     fires_per_FWI4_00 = fwi4_00_fires_count/fwi4_00_count
@@ -335,10 +342,10 @@ def fires_per_fwi4():
     fires_per_FWI4_19 = fwi4_19_fires_count/fwi4_19_count
     fires_per_FWI4_20 = fwi4_20_fires_count/fwi4_20_count
 
-    data = {'Period': ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2000-2018', '2019-2020'], 
-    'FWI_index => 4' : [fwi4_00_count, fwi4_01_count, fwi4_02_count, fwi4_03_count, fwi4_04_count, fwi4_05_count, fwi4_06_count, fwi4_07_count, fwi4_08_count, fwi4_09_count, fwi4_10_count, fwi4_11_count, fwi4_12_count, fwi4_13_count, fwi4_14_count, fwi4_15_count, fwi4_16_count, fwi4_17_count, fwi4_18_count, fwi4_19_count, fwi4_20_count, pre19FWI4Count, post18FWI4Count],
-     'Fires during FWI_index => 4': [fwi4_00_fires_count, fwi4_01_fires_count, fwi4_02_fires_count, fwi4_03_fires_count, fwi4_04_fires_count, fwi4_05_fires_count, fwi4_06_fires_count, fwi4_07_fires_count, fwi4_08_fires_count, fwi4_09_fires_count, fwi4_10_fires_count, fwi4_11_fires_count, fwi4_12_fires_count, fwi4_13_fires_count, fwi4_14_fires_count, fwi4_15_fires_count, fwi4_16_fires_count, fwi4_17_fires_count, fwi4_18_fires_count, fwi4_19_fires_count, fwi4_20_fires_count, pre19FWI4Fires, post18FWI4Fires],
-      'Fires per FWI_index => 4' : [fires_per_FWI4_00, fires_per_FWI4_01, fires_per_FWI4_02, fires_per_FWI4_03, fires_per_FWI4_04, fires_per_FWI4_05, fires_per_FWI4_06, fires_per_FWI4_07, fires_per_FWI4_08, fires_per_FWI4_09, fires_per_FWI4_10, fires_per_FWI4_11, fires_per_FWI4_12, fires_per_FWI4_13, fires_per_FWI4_14, fires_per_FWI4_15, fires_per_FWI4_16, fires_per_FWI4_17, fires_per_FWI4_18, fires_per_FWI4_19, fires_per_FWI4_20, fires_per_FWI4_pre, fires_per_FWI4_post]}
+    data = {'Period': ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2000-2017', '2000-2018', '2019-2020'], 
+    'FWI_index => 4' : [fwi4_00_count, fwi4_01_count, fwi4_02_count, fwi4_03_count, fwi4_04_count, fwi4_05_count, fwi4_06_count, fwi4_07_count, fwi4_08_count, fwi4_09_count, fwi4_10_count, fwi4_11_count, fwi4_12_count, fwi4_13_count, fwi4_14_count, fwi4_15_count, fwi4_16_count, fwi4_17_count, fwi4_18_count, fwi4_19_count, fwi4_20_count, pre18FWI4Count, pre19FWI4Count, post18FWI4Count],
+     'Fires during FWI_index => 4': [fwi4_00_fires_count, fwi4_01_fires_count, fwi4_02_fires_count, fwi4_03_fires_count, fwi4_04_fires_count, fwi4_05_fires_count, fwi4_06_fires_count, fwi4_07_fires_count, fwi4_08_fires_count, fwi4_09_fires_count, fwi4_10_fires_count, fwi4_11_fires_count, fwi4_12_fires_count, fwi4_13_fires_count, fwi4_14_fires_count, fwi4_15_fires_count, fwi4_16_fires_count, fwi4_17_fires_count, fwi4_18_fires_count, fwi4_19_fires_count, fwi4_20_fires_count, pre18FWI4Fires, pre19FWI4Fires, post18FWI4Fires],
+      'Fires per FWI_index => 4' : [fires_per_FWI4_00, fires_per_FWI4_01, fires_per_FWI4_02, fires_per_FWI4_03, fires_per_FWI4_04, fires_per_FWI4_05, fires_per_FWI4_06, fires_per_FWI4_07, fires_per_FWI4_08, fires_per_FWI4_09, fires_per_FWI4_10, fires_per_FWI4_11, fires_per_FWI4_12, fires_per_FWI4_13, fires_per_FWI4_14, fires_per_FWI4_15, fires_per_FWI4_16, fires_per_FWI4_17, fires_per_FWI4_18, fires_per_FWI4_19, fires_per_FWI4_20, fires_per_FWI4_pre_18, fires_per_FWI4_pre, fires_per_FWI4_post]}
     
     firesPerFWIdf = pd.DataFrame(data)
    
