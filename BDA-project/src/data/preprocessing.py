@@ -22,7 +22,6 @@ class PreProcessRisk:
         else:
             PreProcessRisk.dataset = dataset
 
-        # Initializing instances of the smaller profile DF and the larger DF
         PreProcessRisk.dataset = PreProcessRisk.dataset.drop(columns=['Nederbord',
        'RH', 'Vindhastighet', 'Vindriktning', 'FFMC', 'DMC', 'DC', 'ISI',
        'BUI', 'HBV_o', 'HBV_u', 'HBV', 'HBV_index', 'Tmedel','Temp',
@@ -93,8 +92,6 @@ class PreProcessReported():
         else:
             dataset = dataset
         dataset = _filter_rows_by_values(dataset,'BEJBbrandorsakText',['Grillning eller lägereld'])
-        dataset = _sum_columns(dataset,['arealProduktivSkogsmark_m2','arealAnnanTradbevuxenMark_m2','arealMarkUtanTrad_m2'],'TotArea')
-        dataset['Hectares'] = dataset['TotArea']/10000
         dataset = dataset.drop(columns=['tid','sweref99Ost','sweref99Norr','verksamhetText','arealProduktivSkogsmark_m2','arealAnnanTradbevuxenMark_m2','arealMarkUtanTrad_m2','BEJBbrandorsakText'])
         dataset['Month'] = dataset['datum'].dt.month
         dataset['Day'] = dataset['datum'].dt.day
@@ -151,3 +148,71 @@ class PreProcessMerge():
         fires2020 = tablesplit.loc['2020-1-1' : '2020-12-31']
 
         return pre2019, post2018, fires2000, fires2001, fires2002, fires2003, fires2004, fires2005, fires2006, fires2007, fires2008, fires2009, fires2010, fires2011, fires2012, fires2013, fires2014, fires2015, fires2016, fires2017, fires2018, fires2019, fires2020
+
+class PreProcessTables():
+    @staticmethod
+    def month_year(dataframe=None):
+        month_year = pd.DataFrame(columns=['fires','Sum'])
+        month_year['Month'] = dataframe['Month']
+        month_year['Year'] = dataframe['Year']
+        month_year['Date'] = dataframe['Date']
+        month_year= month_year.assign(fires=1)
+        month_year_labels = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
+        month_year['Month_name'] = month_year['Month'].apply(lambda x: month_year_labels[x])
+        month_year['Date'] = pd.to_datetime(month_year['Date'], format='%Y-%m-%d')
+        month_year['yday'] = month_year['Date'].dt.dayofyear
+        month_year['Day'] = month_year['Date'].dt.day
+        month_year = month_year.sort_values(by=['Year','Month'])
+        return month_year
+    @staticmethod
+    def fires_day_month(dataframe=None):
+        dataframe = dataframe.reset_index()
+        month_labels = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
+        fires_day_month = pd.DataFrame(columns=['month_name','Sum'])
+        fires_day_month['Sum'] = dataframe.value_counts(['Year','Day','Month']).to_frame()
+        fires_day_month = fires_day_month.reset_index()
+        fires_day_month['month_name'] = fires_day_month['Month'].apply(lambda x: month_labels[x])
+        fires_day_month['Date'] = pd.to_datetime({'year':fires_day_month['Year'],'month': fires_day_month['Month'],'day':fires_day_month['Day']})
+        fires_day_month['yday'] = fires_day_month['Date'].dt.dayofyear
+        fires_day_month['Week'] = fires_day_month['Date'].dt.week
+        return fires_day_month
+    @staticmethod
+    def fires_day_month_v2(dataframe=None):
+        tablesplit = dataframe.set_index(['Date'])
+        #FutureWarning at this row
+        pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
+        #FutureWarning at this row
+        pre2019['year_group'] = '2000-2018'
+        post2018 = tablesplit.loc['2019-1-1' : '2020-12-31']
+        post2018['year_group'] = '2019-2020 '
+        post2018.sort_values(by='yday')
+        fires_day_month_v2 = pd.concat([pre2019,post2018])
+        fires_day_month_v2= fires_day_month_v2.reset_index()
+        fires_day_month_v2 = fires_day_month_v2.sort_values(by='Date')
+        fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
+        return fires_day_month_v2
+    @staticmethod
+    def fire_muni(dataframe=None):
+        fire_muni = dataframe
+        fire_muni = fire_muni[['Date','Municipality_name']]
+        allyears = pd.DataFrame(columns=['fires'])
+        fire_muni_pre2019 = pd.DataFrame(columns=['fires'])
+        fire_muni_post2018 = pd.DataFrame(columns=['fires'])
+        tt = fire_muni.set_index(['Date'])
+        fire_muni_pre2019 = tt.loc['2000-01-01':'2018-12-31']
+        fire_muni_pre2019['year_group'] = '2000-2018'
+        fire_muni_post2018 = tt.loc['2019-01-01' : '2020-12-31']
+        fire_muni_post2018['year_group'] = '2019-2020'
+        fire_muni_post2018.sort_values(by='Date')
+        allyears = pd.concat([fire_muni_pre2019,fire_muni_post2018])
+        allyears = allyears.assign(fires=1)
+        fire_muni_pre2019 = fire_muni_pre2019.assign(fires=1)
+        fire_muni_post2018 = fire_muni_post2018.assign(fires=1)
+        allyears['Municipality_name'] = allyears['Municipality_name'].replace('Malung','Malung-Sälen')
+        allyears = allyears.groupby(allyears['Municipality_name']).sum()
+        allyears= allyears.reset_index()
+        fire_muni_pre2019= fire_muni_pre2019.groupby(fire_muni_pre2019['Municipality_name']).sum()
+        fire_muni_pre2019= fire_muni_pre2019.reset_index()
+        fire_muni_post2018= fire_muni_post2018.groupby(fire_muni_post2018['Municipality_name']).sum()
+        fire_muni_post2018= fire_muni_post2018.reset_index()
+        return fire_muni_pre2019,fire_muni_post2018, allyears

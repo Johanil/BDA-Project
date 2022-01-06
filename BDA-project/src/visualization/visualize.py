@@ -18,9 +18,18 @@ import os
 current_directory = os.getcwd()
 
 def main():
-    path = Path(current_directory+r"\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
-    df = pd.read_csv(path)
+    month_year_path = Path(current_directory+r"\BDA-project\data\processed\month_year.csv")
+    fires_day_month_path_v2 = Path(current_directory+r"\BDA-project\data\processed\fires_day_month_v2.csv")
+    fire_muni_pre2019_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_pre2019.csv")
+    fire_muni_post2018_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
+    allyears_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
+    month_year = pd.read_csv(month_year_path)
+    fires_day_month_v2 = pd.read_csv(fires_day_month_path_v2)
+    fire_muni_post2018 = pd.read_csv(fire_muni_post2018_path)
+    fire_muni_pre2019 = pd.read_csv(fire_muni_pre2019_path)
+    allyears = pd.read_csv(allyears_path)
     plt.rcParams["figure.figsize"] = (18,8)
+    """
     month_year = pd.DataFrame(columns=['fires','Sum'])
     month_year['Month'] = df['Month']
     month_year['Year'] = df['Year']
@@ -32,18 +41,20 @@ def main():
     month_year['yday'] = month_year['Date'].dt.dayofyear
     month_year['Day'] = month_year['Date'].dt.day
     month_year = month_year.sort_values(by=['Year','Month'])
+    """
     logger = logging.getLogger(__name__)
     logger.info('Creating plots')
     create_fires_month_year_lineplot(month_year)
-    df = df.reset_index()
+    """
     fires_day_month = pd.DataFrame(columns=['month_name','Sum'])
     fires_day_month['Sum'] = month_year.value_counts(['Year','Day','Month']).to_frame()
     fires_day_month = fires_day_month.reset_index()
-    month_labels = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
     fires_day_month['month_name'] = fires_day_month['Month'].apply(lambda x: month_labels[x])
     fires_day_month['Date'] = pd.to_datetime({'year':fires_day_month['Year'],'month': fires_day_month['Month'],'day':fires_day_month['Day']})
     fires_day_month['yday'] = fires_day_month['Date'].dt.dayofyear
     fires_day_month['Week'] = fires_day_month['Date'].dt.week
+    """
+    """
     tablesplit = fires_day_month.set_index(['Date'])
     #FutureWarning at this row
     pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
@@ -56,9 +67,11 @@ def main():
     fires_day_month_v2= fires_day_month_v2.reset_index()
     fires_day_month_v2 = fires_day_month_v2.sort_values(by='Date')
     fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
+    """
     create_fires_yday_lineplot(fires_day_month_v2)
     create_fires_week_lineplot(fires_day_month_v2)
     create_fires_yday_rol7_mean_grouped(fires_day_month_v2)
+    """
     fire_muni = df
     fire_muni = fire_muni[['Date','Municipality_name']]
     allyears = pd.DataFrame(columns=['fires'])
@@ -81,6 +94,7 @@ def main():
     fire_muni_pre2019= fire_muni_pre2019.reset_index()
     fire_muni_post2018= fire_muni_post2018.groupby(fire_muni_post2018['Municipality_name']).sum()
     fire_muni_post2018= fire_muni_post2018.reset_index()
+    """
 
     create_fires_muni_map(allyears)
     create_fires_muni_map(fire_muni_pre2019, "\muni_fire_pre2019.html")

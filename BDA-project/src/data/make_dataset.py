@@ -5,12 +5,10 @@ import logging
 import pandas as pd
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
-from preprocessing import PreProcessMerge, PreProcessReported, PreProcessRisk
+from preprocessing import PreProcessMerge, PreProcessReported, PreProcessRisk, PreProcessTables
 import os
 current_directory = os.getcwd()
-#@click.command()
-#@click.argument('input_filepath', type=click.Path(exists=True))
-#@click.argument('output_filepath', type=click.Path())
+
 def main():
     risk_path = Path(current_directory+r"\BDA-project\data\raw\Brandriskdata 2000-2020.csv")
     fire_path = Path(current_directory+r"\BDA-project\data\raw\Insatser till brand i skog och mark 2000-2020.xlsx")
@@ -23,17 +21,29 @@ def main():
     ppr = PreProcessRisk()
     ppf = PreProcessReported()
     ppm = PreProcessMerge()
-    
+    ppt = PreProcessTables()
     processed_risk_data= ppr.process_dataframe(dataset=df_risk_data)
     processed_fire_data = ppf.process_dataframe(df_fire_data)
     processed_merged = ppm.process_dataframe(processed_risk_data, processed_fire_data)
     logger = logging.getLogger(__name__)
     logger.info('Making final datasets from raw data')
 
+    month_year = ppt.month_year(processed_merged)
+    month_year.to_csv(current_directory+r"\BDA-project\data\processed\month_year.csv")
+    fires_day_month = ppt.fires_day_month(month_year)
+    fires_day_month_v2 = ppt.fires_day_month_v2(fires_day_month)
+    fires_day_month_v2.to_csv(current_directory+r"\BDA-project\data\processed\fires_day_month_v2.csv")
+    
+    fire_muni_pre2019, fire_muni_post2018, allyears = ppt.fire_muni(processed_merged)
+
+    fire_muni_pre2019.to_csv(current_directory+r"\BDA-project\data\processed\fire_muni_pre2019.csv")
+    fire_muni_post2018.to_csv(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
+    allyears.to_csv(current_directory+r"\BDA-project\data\processed\allyears.csv")
+
     processed_merged.to_csv(current_directory+r"\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
+    
     pre_risk, post_risk, risk2000, risk2001, risk2002, risk2003, risk2004, risk2005, risk2006, risk2007, risk2008, risk2009, risk2010, risk2011, risk2012, risk2013, risk2014, risk2015, risk2016, risk2017, risk2018, risk2019, risk2020 = ppr.process_dataframe_fwi4_days(ppr.process_dataframe(df_risk_data))
-    #pre_risk, post_risk, risk2018, risk2019, risk2020 = ppr.process_dataframe_fwi4_days(ppr.process_dataframe(df_risk_data))
- 
+  
     processed_merged_fwi4 = ppm.process_dataframe(processed_risk_data, processed_fire_data, 4)
     pre_merged, post_merged, merged_2000, merged_2001, merged_2002, merged_2003, merged_2004, merged_2005, merged_2006, merged_2007, merged_2008, merged_2009, merged_2010, merged_2011, merged_2012, merged_2013, merged_2014, merged_2015, merged_2016, merged_2017, merged_2018, merged_2019, merged_2020 = ppm.process_dataframe_fwi4_days(processed_merged_fwi4)
 
