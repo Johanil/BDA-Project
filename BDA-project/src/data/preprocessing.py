@@ -149,7 +149,7 @@ class PreProcessMerge():
         fires2019 = tablesplit.loc['2019-1-1' : '2019-12-31']
         fires2020 = tablesplit.loc['2020-1-1' : '2020-12-31']
 
-        return pre2019, post2018, fires2000, fires2001, fires2002, fires2003, fires2004, fires2005, fires2006, fires2007, fires2008, fires2009, fires2010, fires2011, fires2012, fires2013, fires2014, fires2015, fires2016, fires2017, fires2018, fires2019, fires2020
+        return pre2018, pre2019, post2018, fires2000, fires2001, fires2002, fires2003, fires2004, fires2005, fires2006, fires2007, fires2008, fires2009, fires2010, fires2011, fires2012, fires2013, fires2014, fires2015, fires2016, fires2017, fires2018, fires2019, fires2020
 
 class PreProcessTables():
     @staticmethod

@@ -43,11 +43,9 @@ def main():
     processed_merged.to_csv(current_directory+r"\BDA-project\data\processed\FiresWithRisks 2000-2020.csv")
 
     pre18risk, pre_risk, post_risk, risk2000, risk2001, risk2002, risk2003, risk2004, risk2005, risk2006, risk2007, risk2008, risk2009, risk2010, risk2011, risk2012, risk2013, risk2014, risk2015, risk2016, risk2017, risk2018, risk2019, risk2020 = ppr.process_dataframe_fwi4_days(ppr.process_dataframe(df_risk_data))
-    #pre_risk, post_risk, risk2018, risk2019, risk2020 = ppr.process_dataframe_fwi4_days(ppr.process_dataframe(df_risk_data))
  
     processed_merged_fwi4 = ppm.process_dataframe(processed_risk_data, processed_fire_data, 4)
     pre18merged, pre_merged, post_merged, merged_2000, merged_2001, merged_2002, merged_2003, merged_2004, merged_2005, merged_2006, merged_2007, merged_2008, merged_2009, merged_2010, merged_2011, merged_2012, merged_2013, merged_2014, merged_2015, merged_2016, merged_2017, merged_2018, merged_2019, merged_2020 = ppm.process_dataframe_fwi4_days(processed_merged_fwi4)
-
     print("Writing csv files to \processed\.. directory..")
 
     pre18risk.to_csv(current_directory+r"\BDA-project\data\processed\pre18fwi4Risk.csv")
