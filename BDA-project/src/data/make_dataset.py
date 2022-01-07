@@ -31,8 +31,8 @@ def main():
     month_year = ppt.month_year(processed_merged)
     month_year.to_csv(current_directory+r"\BDA-project\data\processed\month_year.csv")
     fires_day_month = ppt.fires_day_month(month_year)
-    fires_day_month_v2 = ppt.fires_day_month_v2(fires_day_month)
-    fires_day_month_v2.to_csv(current_directory+r"\BDA-project\data\processed\fires_day_month_v2.csv")
+    fires_day_month_rol14_mean = ppt.fires_day_month_rol14_mean(fires_day_month)
+    fires_day_month_rol14_mean.to_csv(current_directory+r"\BDA-project\data\processed\fires_day_month_rol14_mean.csv")
 
     fire_muni_pre2019, fire_muni_post2018, allyears = ppt.fire_muni(processed_merged)
 

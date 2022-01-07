@@ -19,82 +19,25 @@ current_directory = os.getcwd()
 
 def main():
     month_year_path = Path(current_directory+r"\BDA-project\data\processed\month_year.csv")
-    fires_day_month_path_v2 = Path(current_directory+r"\BDA-project\data\processed\fires_day_month_v2.csv")
+    fires_day_month_rol14_mean_path = Path(current_directory+r"\BDA-project\data\processed\fires_day_month_rol14_mean.csv")
     fire_muni_pre2019_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_pre2019.csv")
     fire_muni_post2018_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
     allyears_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
     month_year = pd.read_csv(month_year_path)
-    fires_day_month_v2 = pd.read_csv(fires_day_month_path_v2)
+    fires_day_month_rol14_mean = pd.read_csv(fires_day_month_rol14_mean_path)
     fire_muni_post2018 = pd.read_csv(fire_muni_post2018_path)
     fire_muni_pre2019 = pd.read_csv(fire_muni_pre2019_path)
     allyears = pd.read_csv(allyears_path)
     plt.rcParams["figure.figsize"] = (18,8)
-    """
-    month_year = pd.DataFrame(columns=['fires','Sum'])
-    month_year['Month'] = df['Month']
-    month_year['Year'] = df['Year']
-    month_year['Date'] = df['Date']
-    month_year= month_year.assign(fires=1)
-    month_year_labels = {1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'}
-    month_year['Month_name'] = month_year['Month'].apply(lambda x: month_year_labels[x])
-    month_year['Date'] = pd.to_datetime(month_year['Date'], format='%Y-%m-%d')
-    month_year['yday'] = month_year['Date'].dt.dayofyear
-    month_year['Day'] = month_year['Date'].dt.day
-    month_year = month_year.sort_values(by=['Year','Month'])
-    """
+
     logger = logging.getLogger(__name__)
     logger.info('Creating plots')
     create_fires_month_year_lineplot(month_year)
-    """
-    fires_day_month = pd.DataFrame(columns=['month_name','Sum'])
-    fires_day_month['Sum'] = month_year.value_counts(['Year','Day','Month']).to_frame()
-    fires_day_month = fires_day_month.reset_index()
-    fires_day_month['month_name'] = fires_day_month['Month'].apply(lambda x: month_labels[x])
-    fires_day_month['Date'] = pd.to_datetime({'year':fires_day_month['Year'],'month': fires_day_month['Month'],'day':fires_day_month['Day']})
-    fires_day_month['yday'] = fires_day_month['Date'].dt.dayofyear
-    fires_day_month['Week'] = fires_day_month['Date'].dt.week
-    """
-    """
-    tablesplit = fires_day_month.set_index(['Date'])
-    #FutureWarning at this row
-    pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
-    #FutureWarning at this row
-    pre2019['year_group'] = '2000-2018'
-    post2018 = tablesplit.loc['2019-1-1' : '2020-12-31']
-    post2018['year_group'] = '2019-2020 '
-    post2018.sort_values(by='yday')
-    fires_day_month_v2 = pd.concat([pre2019,post2018])
-    fires_day_month_v2= fires_day_month_v2.reset_index()
-    fires_day_month_v2 = fires_day_month_v2.sort_values(by='Date')
-    fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
-    """
-    create_fires_yday_lineplot(fires_day_month_v2)
-    create_fires_week_lineplot(fires_day_month_v2)
-    create_fires_yday_rol7_mean_grouped(fires_day_month_v2)
-    """
-    fire_muni = df
-    fire_muni = fire_muni[['Date','Municipality_name']]
-    allyears = pd.DataFrame(columns=['fires'])
-    fire_muni_pre2019 = pd.DataFrame(columns=['fires'])
-    fire_muni_post2018 = pd.DataFrame(columns=['fires'])
-    tt = fire_muni.set_index(['Date'])
-    fire_muni_pre2019 = tt.loc['2000-01-01':'2018-12-31']
-    fire_muni_pre2019['year_group'] = '2000-2018'
-    fire_muni_post2018 = tt.loc['2019-01-01' : '2020-12-31']
-    fire_muni_post2018['year_group'] = '2019-2020'
-    fire_muni_post2018.sort_values(by='Date')
-    allyears = pd.concat([fire_muni_pre2019,fire_muni_post2018])
-    allyears = allyears.assign(fires=1)
-    fire_muni_pre2019 = fire_muni_pre2019.assign(fires=1)
-    fire_muni_post2018 = fire_muni_post2018.assign(fires=1)
-    allyears['Municipality_name'] = allyears['Municipality_name'].replace('Malung','Malung-Sälen')
-    allyears = allyears.groupby(allyears['Municipality_name']).sum()
-    allyears= allyears.reset_index()
-    fire_muni_pre2019= fire_muni_pre2019.groupby(fire_muni_pre2019['Municipality_name']).sum()
-    fire_muni_pre2019= fire_muni_pre2019.reset_index()
-    fire_muni_post2018= fire_muni_post2018.groupby(fire_muni_post2018['Municipality_name']).sum()
-    fire_muni_post2018= fire_muni_post2018.reset_index()
-    """
+
+    create_fires_yday_lineplot(fires_day_month_rol14_mean)
+    create_fires_week_lineplot(fires_day_month_rol14_mean)
+    create_fires_yday_rol14_mean_grouped(fires_day_month_rol14_mean)
+
 
     create_fires_muni_map(allyears)
     create_fires_muni_map(fire_muni_pre2019, "\muni_fire_pre2019.html")
@@ -136,12 +79,12 @@ def create_fires_week_lineplot(df):
     plt.savefig(path)
 
 
-def create_fires_yday_rol7_mean_grouped(df):
+def create_fires_yday_rol14_mean_grouped(df):
     fig = df.groupby(['Week','year_group']).median().unstack()
-    line = fig.plot(kind='line',y='rol7', stacked=True)
+    line = fig.plot(kind='line',y='rol14', stacked=True)
     #plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
     line.legend(loc='center right')
-    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
+    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol14_mean_grouped")
     plt.savefig(path)
 
 def create_fires_muni_map(df, filename="muni_fire"):
@@ -167,7 +110,7 @@ def create_fires_muni_map(df, filename="muni_fire"):
     ).add_to(map)
     map.save(current_directory+r"\BDA-project\reports\figures"+filename)
     #map.save('./data/AllReportedFires.html')
-    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
+    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol14_mean_grouped")
     plt.savefig(path)
 
 def fires_per_fwi4():

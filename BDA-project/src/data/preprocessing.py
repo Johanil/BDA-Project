@@ -179,7 +179,7 @@ class PreProcessTables():
         fires_day_month['Week'] = fires_day_month['Date'].dt.week
         return fires_day_month
     @staticmethod
-    def fires_day_month_v2(dataframe=None):
+    def fires_day_month_rol14_mean(dataframe=None):
         tablesplit = dataframe.set_index(['Date'])
         #FutureWarning at this row
         pre2019 = tablesplit.loc['2000-1-1':'2018-12-31']
@@ -191,7 +191,7 @@ class PreProcessTables():
         fires_day_month_v2 = pd.concat([pre2019,post2018])
         fires_day_month_v2= fires_day_month_v2.reset_index()
         fires_day_month_v2 = fires_day_month_v2.sort_values(by='Date')
-        fires_day_month_v2['rol7'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
+        fires_day_month_v2['rol14'] = fires_day_month_v2[['Date','Sum']].rolling(14).mean()
         return fires_day_month_v2
     @staticmethod
     def fire_muni(dataframe=None):
