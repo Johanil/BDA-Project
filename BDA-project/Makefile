@@ -28,6 +28,8 @@ requirements: test_environment
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+visualize:
+	$(PYTHON_INTERPRETER) src/visualization/visualize.py data/reports/figures
 
 ## Delete all compiled Python files
 clean:

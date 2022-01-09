@@ -1,4 +1,6 @@
+from typing import Container
 import folium
+from jinja2.bccache import Bucket
 import pandas as pd
 import numpy as np
 import json
@@ -19,12 +21,12 @@ current_directory = os.getcwd()
 
 def main():
     month_year_path = Path(current_directory+r"\BDA-project\data\processed\month_year.csv")
-    fires_day_month_rol14_mean_path = Path(current_directory+r"\BDA-project\data\processed\fires_day_month_rol14_mean.csv")
+    fires_day_month_rol_mean_path = Path(current_directory+r"\BDA-project\data\processed\fires_day_month_rol_mean.csv")
     fire_muni_pre2019_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_pre2019.csv")
     fire_muni_post2018_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
-    allyears_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_post2018.csv")
+    allyears_path = Path(current_directory+r"\BDA-project\data\processed\allyears.csv")
     month_year = pd.read_csv(month_year_path)
-    fires_day_month_rol14_mean = pd.read_csv(fires_day_month_rol14_mean_path)
+    fires_day_month_rol_mean = pd.read_csv(fires_day_month_rol_mean_path)
     fire_muni_post2018 = pd.read_csv(fire_muni_post2018_path)
     fire_muni_pre2019 = pd.read_csv(fire_muni_pre2019_path)
     allyears = pd.read_csv(allyears_path)
@@ -34,23 +36,26 @@ def main():
     logger.info('Creating plots')
     create_fires_month_year_lineplot(month_year)
 
-    create_fires_yday_lineplot(fires_day_month_rol14_mean)
-    create_fires_week_lineplot(fires_day_month_rol14_mean)
-    create_fires_yday_rol14_mean_grouped(fires_day_month_rol14_mean)
+    create_fires_yday_lineplot(fires_day_month_rol_mean)
+    create_fires_week_lineplot(fires_day_month_rol_mean)
+    create_fires_yday_rol5_mean_grouped(fires_day_month_rol_mean)
+    create_fires_yday_rol7_mean_grouped(fires_day_month_rol_mean)
+    create_fires_yday_rol14_mean_grouped(fires_day_month_rol_mean)
 
 
-    create_fires_muni_map(allyears)
+    create_fires_muni_map(allyears,r"\allyears.html")
     create_fires_muni_map(fire_muni_pre2019, "\muni_fire_pre2019.html")
     create_fires_muni_map(fire_muni_post2018,"\muni_fire_post2018.html")
     
     fires_per_fwi4()
+    logger.info('Plots created')
 
 #Seems to be working, result needs to be double checked! Values only from april to august. Reasonable? All are FWI >=4
 def create_fires_month_year_lineplot(df):
-    month_labels = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
+    month_labels = ['Jan','Feb','Mar','Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct','Nov','Dec']
     fig = df.groupby(['Month','Year']).sum().unstack()
     line = fig.plot(kind='line',y='fires', stacked=True)
-    line.set_xticks([4,5,6,7,8,9,10])
+    line.set_xticks([1,2,3,4,5,6,7,8,9,10,11,12])
     line.set_xticklabels(month_labels)
     line.legend(loc='center right')
     path = Path(current_directory+r"\BDA-project\reports\figures\fires_month_year_lineplot")
@@ -60,7 +65,7 @@ def create_fires_yday_lineplot(df):
 
     fig = df.groupby(['yday','Year']).sum().unstack()
     line = fig.plot(kind='line',y='Sum', stacked=True)
-    plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
+    #plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
     #line.set_xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
     #line.set_xticklabels(fires_month['Month'].values)
     line.legend(loc='center right')
@@ -78,6 +83,13 @@ def create_fires_week_lineplot(df):
     path = Path(current_directory+r"\BDA-project\reports\figures\fires_week_lineplot")
     plt.savefig(path)
 
+def create_fires_yday_rol7_mean_grouped(df):
+    fig = df.groupby(['Week','year_group']).median().unstack()
+    line = fig.plot(kind='line',y='rol7', stacked=True)
+    #plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
+    line.legend(loc='center right')
+    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol7_mean_grouped")
+    plt.savefig(path)
 
 def create_fires_yday_rol14_mean_grouped(df):
     fig = df.groupby(['Week','year_group']).median().unstack()
@@ -87,8 +99,15 @@ def create_fires_yday_rol14_mean_grouped(df):
     path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol14_mean_grouped")
     plt.savefig(path)
 
+def create_fires_yday_rol5_mean_grouped(df):
+    fig = df.groupby(['Week','year_group']).median().unstack()
+    line = fig.plot(kind='line',y='rol5', stacked=True)
+    #plt.xticks(np.linspace(4,10,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
+    line.legend(loc='center right')
+    path = Path(current_directory+r"\BDA-project\reports\figures\fires_yday_rol5_mean_grouped")
+    plt.savefig(path)
+
 def create_fires_muni_map(df, filename="muni_fire"):
-    df['Municipality_name'] = df['Municipality_name'].replace('Malung','Malung-Sälen')
     map = folium.Map(location = [59.334591, 18.063240],
                zoom_start = 5.45)
     path = Path(current_directory+r"\BDA-project\data\raw\sweden-municipalities-topo.json")
@@ -106,7 +125,6 @@ def create_fires_muni_map(df, filename="muni_fire"):
     fill_opacity=0.9, 
     line_opacity=0.5,
     legend_name="Number of reported fires",
-    #threshold_scale=[1,2,4,8,16,32,64,128,256,512,1024]
     ).add_to(map)
     map.save(current_directory+r"\BDA-project\reports\figures"+filename)
     #map.save('./data/AllReportedFires.html')
