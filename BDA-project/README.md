@@ -1,7 +1,7 @@
 BDA-Project
 ==============================
 
-Big data analytics project to examine if changes in sales of  disposable BBQ-grills have had any  impact on wildfires in Sweden
+Big data analytics project to examine if changes in sales of  disposable BBQ-grills have had any  impact on forest fires in Sweden
 
 Project Organization
 ------------
