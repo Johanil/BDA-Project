@@ -14,9 +14,9 @@ The fire risk dataset contains 23 columns, below you'll find an explaination for
 
 The following is an example of a row from the fire risk dataset
 
-| PunktID | E      | N       | Kommun | Datum      | Temp | Tmedel | Nederbord | RH   | Vindhastighet | Vindriktning | FFMC | DMC | DC    | ISI | BUI | FWI | FWI\_index | HBV\_o | HBV\_u | HBV | HBV\_index | Gras |  |
-| :------- | ------ | ------- | ------ | ---------- | ---- | ------ | --------- | ---- | ------------- | ------------ | ---- | --- | ----- | --- | --- | --- | ---------- | ------ | ------ | --- | ---------- | ---- |  |
-| 14      | 474160 | 6467091 | 509    | 2019-05-23 | 12,2 | 11     | 6,3       | 69,6 | 5             | 204,6        | 45,5 | 2,7 | 145,6 | 0,2 | 5,2 | 0,1 | 1          | 85     | 45     | 87  | 1          | 2    |  |
+| PunktID | E      | N       | Kommun | Datum      | Temp | Tmedel | Nederbord | RH   | Vindhastighet | Vindriktning | FFMC | DMC | DC    | ISI | BUI | FWI | FWI\_index | HBV\_o | HBV\_u | HBV | HBV\_index | Gras | 
+| ------- | ------ | ------- | ------ | ---------- | ---- | ------ | --------- | ---- | ------------- | ------------ | ---- | --- | ----- | --- | --- | --- | ---------- | ------ | ------ | --- | ---------- | ---- |
+| 14      | 474160 | 6467091 | 509    | 2019-05-23 | 12,2 | 11     | 6,3       | 69,6 | 5             | 204,6        | 45,5 | 2,7 | 145,6 | 0,2 | 5,2 | 0,1 | 1          | 85     | 45     | 87  | 1          | 2    |  
 
 | PunktID | E      | N       | Kommun |
 | ------- | ------ | ------- | ------ |
