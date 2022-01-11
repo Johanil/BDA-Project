@@ -9,10 +9,9 @@ Make commands
 Data
 ------------
 | Left-Aligned  | Center Aligned  | Right Aligned |
-| :------------ |:---------------:| -----:|
-| col 3 is      | some wordy text | $1600 |
-| col 2 is      | centered        |   $12 |
-| zebra stripes | are neat        |    $1 |
+| PunktID | E      | N       | Kommun | Datum    | Temp | Tmedel | Nederbord | RH | Vindhastighet | Vindriktning | FFMC | DMC | DC | ISI | BUI | FWI | FWI\_index | HBV\_o | HBV\_u | HBV | HBV\_index | Gras |
+| ------- | ------ | ------- | ------ | -------- | ---- | ------ | --------- | -- | ------------- | ------------ | ---- | --- | -- | --- | --- | --- | ---------- | ------ | ------ | --- | ---------- | ---- |
+| 1       | 454334 | 6690301 | 2021   | ######## | 1,8  | 1,6    | 0         | 48 | 3,6           | NULL         | 0    | 0   | 0  | 0   | 0   | 0   | 1          | 94     | 95     | 100 | 1          | NULL |
 Other
 ------------
 
