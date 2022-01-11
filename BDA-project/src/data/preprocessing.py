@@ -5,12 +5,6 @@ from datetime import datetime, date
 def _filter_rows_by_values(df, column, keep_values):
     return df[df[column].isin(keep_values)]
 
-def _sum_columns(df, columns, new_column_name):
-    df[new_column_name] = df[columns].sum(axis=1)
-    return df
-
-
-
 class PreProcessRisk:
     
     @staticmethod
@@ -176,7 +170,7 @@ class PreProcessTables():
         fires_day_month['month_name'] = fires_day_month['Month'].apply(lambda x: month_labels[x])
         fires_day_month['Date'] = pd.to_datetime({'year':fires_day_month['Year'],'month': fires_day_month['Month'],'day':fires_day_month['Day']})
         fires_day_month['yday'] = fires_day_month['Date'].dt.dayofyear
-        fires_day_month['Week'] = fires_day_month['Date'].dt.week
+        fires_day_month['Week'] = fires_day_month['Date'].dt.isocalendar().week
         return fires_day_month
     @staticmethod
     def fires_day_month_rol_mean(dataframe=None):

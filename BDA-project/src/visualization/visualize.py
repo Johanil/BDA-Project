@@ -1,5 +1,6 @@
 from typing import Container
 import folium
+from folium import plugins
 from jinja2.bccache import Bucket
 import pandas as pd
 import numpy as np
@@ -11,8 +12,6 @@ from datetime import datetime, date
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import xticks
 import matplotlib.transforms
-from folium import plugins
-from selenium import webdriver
 from ipywidgets import interact, interactive, fixed, interact_manual
 from IPython.display import display, clear_output
 from pandas.plotting import table 
@@ -20,6 +19,8 @@ import os
 current_directory = os.getcwd()
 
 def main():
+    logger = logging.getLogger(__name__)
+    logger.info('Importing processed files')
     month_year_path = Path(current_directory+r"\BDA-project\data\processed\month_year.csv")
     fires_day_month_rol_mean_path = Path(current_directory+r"\BDA-project\data\processed\fires_day_month_rol_mean.csv")
     fire_muni_pre2019_path = Path(current_directory+r"\BDA-project\data\processed\fire_muni_pre2019.csv")
@@ -32,7 +33,7 @@ def main():
     allyears = pd.read_csv(allyears_path)
     plt.rcParams["figure.figsize"] = (18,8)
 
-    logger = logging.getLogger(__name__)
+    
     logger.info('Creating plots')
     create_fires_month_year_lineplot(month_year)
 
@@ -52,19 +53,22 @@ def main():
 
 #Seems to be working, result needs to be double checked! Values only from april to august. Reasonable? All are FWI >=4
 def create_fires_month_year_lineplot(df):
-    month_labels = ['Jan','Feb','Mar','Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct','Nov','Dec']
+    month_labels = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
     fig = df.groupby(['Month','Year']).sum().unstack()
     line = fig.plot(kind='line',y='fires', stacked=True)
-    line.set_xticks([1,2,3,4,5,6,7,8,9,10,11,12])
+    line.set_xticks([4,5,6,7,8,9,10])
     line.set_xticklabels(month_labels)
     line.legend(loc='center right')
     path = Path(current_directory+r"\BDA-project\reports\figures\fires_month_year_lineplot")
     plt.savefig(path)
 
 def create_fires_yday_lineplot(df):
-
+    color_sequence = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c',
+                  '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5',
+                  '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f',
+                  '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5']
     fig = df.groupby(['yday','Year']).sum().unstack()
-    line = fig.plot(kind='line',y='Sum', stacked=True)
+    line = fig.plot(kind='line',y='Sum', stacked=True, color=color_sequence)
     #plt.xticks(np.linspace(90,305,8)[:-1], ('Apr','May','Jun','Jul','Aug','Sep','Oct'))
     #line.set_xticks(np.linspace(0,365,13)[:-1], ('Jan', 'Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct', 'Nov', 'Dec'))
     #line.set_xticklabels(fires_month['Month'].values)

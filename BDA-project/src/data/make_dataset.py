@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import click
 import os
 import logging
 import pandas as pd
@@ -10,14 +9,15 @@ import os
 current_directory = os.getcwd()
 
 def main():
+    logger = logging.getLogger(__name__)
     risk_path = Path(current_directory+r"\BDA-project\data\raw\Brandriskdata 2000-2020.csv")
     fire_path = Path(current_directory+r"\BDA-project\data\raw\Insatser till brand i skog och mark 2000-2020.xlsx")
     types={ 'PunktID': str}
-    print("Reading csv files...")
+    logger.info("Reading csv files...")
     df_risk_data = pd.read_csv(risk_path,sep=';', dtype=types,)
-    print("Firerisk data ingested")
+    logger.info("Firerisk data ingested")
     df_fire_data = pd.read_excel(fire_path)
-    print("Reported fires ingested")
+    logger.info("Reported fires ingested")
     ppr = PreProcessRisk()
     ppf = PreProcessReported()
     ppm = PreProcessMerge()
@@ -26,12 +26,14 @@ def main():
     processed_fire_data = ppf.process_dataframe(df_fire_data)
     processed_merged = ppm.process_dataframe(processed_risk_data, processed_fire_data)
     processed_merged_fwi4 = ppm.process_dataframe(processed_risk_data, processed_fire_data, 4)
-    logger = logging.getLogger(__name__)
     logger.info('Making final datasets from raw data')
 
     month_year = ppt.month_year(processed_merged)
     month_year.to_csv(current_directory+r"\BDA-project\data\processed\month_year.csv")
-    fires_day_month = ppt.fires_day_month(month_year)
+    
+    month_year_fwi4 = ppt.month_year(processed_merged_fwi4)
+    month_year_fwi4.to_csv(current_directory+r"\BDA-project\data\processed\month_year.csv")
+    fires_day_month = ppt.fires_day_month(month_year_fwi4)
     fires_day_month_rol_mean = ppt.fires_day_month_rol_mean(fires_day_month)
     fires_day_month_rol_mean.to_csv(current_directory+r"\BDA-project\data\processed\fires_day_month_rol_mean.csv")
 
@@ -46,7 +48,7 @@ def main():
     pre18risk, pre_risk, post_risk, risk2000, risk2001, risk2002, risk2003, risk2004, risk2005, risk2006, risk2007, risk2008, risk2009, risk2010, risk2011, risk2012, risk2013, risk2014, risk2015, risk2016, risk2017, risk2018, risk2019, risk2020 = ppr.process_dataframe_fwi4_days(ppr.process_dataframe(df_risk_data))
     
     pre18merged, pre_merged, post_merged, merged_2000, merged_2001, merged_2002, merged_2003, merged_2004, merged_2005, merged_2006, merged_2007, merged_2008, merged_2009, merged_2010, merged_2011, merged_2012, merged_2013, merged_2014, merged_2015, merged_2016, merged_2017, merged_2018, merged_2019, merged_2020 = ppm.process_dataframe_fwi4_days(processed_merged_fwi4)
-    print("Writing csv files to \processed\.. directory..")
+    logger.info("Writing csv files to \processed\..")
 
     pre18risk.to_csv(current_directory+r"\BDA-project\data\processed\pre18fwi4Risk.csv")
     pre_risk.to_csv(current_directory+r"\BDA-project\data\processed\pre19fwi4Risk.csv")
@@ -97,7 +99,7 @@ def main():
     merged_2019.to_csv(current_directory+r"\BDA-project\data\processed\2019merged.csv")
     merged_2020.to_csv(current_directory+r"\BDA-project\data\processed\2020merged.csv")
 
-    print("All files processed!")
+    logger.info("All files processed!")
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
