@@ -8,6 +8,7 @@ Make commands
 
 Data
 ------------
+Because of the files sizes, the fire risk data set and the reported fires dataset only have sample samples included. To retrieve complete dataset got to Data Access
 Fire risk data
 ------------
 The fire risk dataset contains 23 columns, below you'll find an explaination for each of the X columns used in this project.
