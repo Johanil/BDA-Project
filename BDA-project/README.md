@@ -27,7 +27,8 @@ Reported fires data
 ------------
 | ar   | datum     | tid   | kommun | kommunKortNamn | verksamhetText                         | sweref99Norr | sweref99Ost | BEJBbrandorsakText       | areaIProduktivSkogsmark\_m2 | areaIAnnanTradbevuxenMark\_m2 | areaIMarkUtanTrad\_m2 |
 | ---- | --------- | ----- | ------ | -------------- | -------------------------------------- | ------------ | ----------- | ------------------------ | --------------------------- | ----------------------------- | --------------------- |
-| 2010 | 2010-04-14 | 18:18 | 1382   | Falkenberg     | Verksamhet inte knuten till en byggnad | 6306404      | 348526      | Grillning eller lägereld | 0                           | 0                             | 4000                  |
+| 2010 | 2010-04-14 | 18:18 | 1382   | Falkenberg     | Verksamhet inte knuten till en byggnad | 6306404      | 348526      | Grillning eller lägereld | 0  | 0                             | 4000                  |
+
 Municipality data
 ---
 
