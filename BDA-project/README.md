@@ -68,10 +68,12 @@ More information about the topojson datatype can be found here: https://github.c
 Data Access
 ---
 By contacting the swedish contingency agency (MSB) at the following email: Statistik@MSB.se you can retreive the complete dataset with reported fires. Make sure to request a complete dataset with information about reported fire indicents between 2000-2020 (or later). For access to fire risk data use the same email adress and request information about FWI measurements between the same years.
-Some information can be access through the IDA data portal which is reached at the following adress: https://ida.msb.se/ (2022-01-12)
+Some information can be access through the IDA data portal if you don't require all datatypes and points used in this project which is reached at the following adress: https://ida.msb.se/ (2022-01-12)
 
 Other
 ------------
+This project was done for the course Big Data Analytics at Uppsala University during the autumn of 2021
+https://www.uu.se/en/admissions/freestanding-courses/course-syllabus/?kKod=2IS077&lasar=
 
 Project Organization
 ------------
