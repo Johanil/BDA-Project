@@ -32,11 +32,10 @@ The following is an example of a row from the fire risk dataset, note that  Punk
 
 Reported fires data
 ------------
-
-| ar                | Year                 |
+| Column names      | Explaination         |
 | ----------------- | -------------------- |
-| datum             | Date                 |
-| ----------------- | -------------------- |                       
+| ar                | Year                 |
+| datum             | Date                 |              
 | kommun            | Municipality code    |
 | kommunKortnamn    | Name of municipality |
 | BEJbrandorsakText | Cause of fire        |
