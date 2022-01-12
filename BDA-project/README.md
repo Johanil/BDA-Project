@@ -6,10 +6,10 @@ This is a big data analytics project to examine if the ban of sales of disposabl
 Make commands
 ------------
 
-data: Run this make command which preproccess the data and creates all nessecary datasets used for analysis in this project.
-visualize: Run this make command to create plots and tables.
+- data: Run this make command which preproccess the data and creates all nessecary datasets used for analysis in this project.
+- visualize: Run this make command to create plots and tables.
 
-More information about makefiles can be found here: https://www.gnu.org/software/make/manual/make.html (2022-01-12)
+More information about makefiles and how they work can be found here: https://www.gnu.org/software/make/manual/make.html (2022-01-12)
 
 Data
 ------------
@@ -74,6 +74,8 @@ Other
 ------------
 This project was done for the course Big Data Analytics at Uppsala University during the autumn of 2021
 https://www.uu.se/en/admissions/freestanding-courses/course-syllabus/?kKod=2IS077&lasar=
+
+This project implemented the Cookie Cutter for data science sctructure to keep everything neat and tidy. More information about cookie cutter for data science can be found here: https://drivendata.github.io/cookiecutter-data-science/
 
 Project Organization
 ------------
