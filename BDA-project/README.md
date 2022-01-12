@@ -72,7 +72,7 @@ Some information can be access through the IDA data portal if you don't require 
 
 Other
 ------------
-This project was done for the course Big Data Analytics at Uppsala University during the autumn of 2021 and recived the following grade: XX
+This project was done for the course Big Data Analytics at Uppsala University during the autumn of 2021 and received the following grade: XX
 https://www.uu.se/en/admissions/freestanding-courses/course-syllabus/?kKod=2IS077&lasar=
 
 This project implemented the Cookie Cutter for data science sctructure to keep everything neat and tidy. More information about cookie cutter for data science can be found here: https://drivendata.github.io/cookiecutter-data-science/
