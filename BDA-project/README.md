@@ -17,7 +17,14 @@ Because of the files sizes, the fire risk data set and the reported fires datase
 
 Fire risk data
 ------------
-The fire risk dataset contains 23 columns, below you'll find an explaination for each of the X columns used in this project.
+
+The following is an example of a row from the fire risk dataset, note that  PunktID, Kommun, Datum, FWI and FWI-index are the only values used for this projects analysis.
+
+| PunktID | E      | N       | Kommun | Datum      | Temp | Tmedel | Nederbord | RH   | Vindhastighet | Vindriktning | FFMC | DMC | DC    | ISI | BUI | FWI | FWI\_index | HBV\_o | HBV\_u | HBV | HBV\_index | Gras | 
+| ------- | ------ | ------- | ------ | ---------- | ---- | ------ | --------- | ---- | ------------- | ------------ | ---- | --- | ----- | --- | --- | --- | ---------- | ------ | ------ | --- | ---------- | ---- |
+| 14      | 474160 | 6467091 | 509    | 2019-05-23 | 12,2 | 11     | 6,3       | 69,6 | 5             | 204,6        | 45,5 | 2,7 | 145,6 | 0,2 | 5,2 | 0,1 | 1          | 85     | 45     | 87  | 1          | 2    |  
+
+The fire risk dataset contains 23 columns, below you'll find an explaination for each of the 5 columns used in this project.
 | Column names    | Explaination                                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | PunktID    | ID for measuring stations                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -30,11 +37,7 @@ The fire risk dataset contains 23 columns, below you'll find an explaination for
 Column information is retrieved from:
 https://www.msb.se/contentassets/319560083841487f84dbbad048c84152/brand-fakta.pdf (2022-01-11)
 
-The following is an example of a row from the fire risk dataset, note that  PunktID, Kommun, Datum, FWI and FWI-index are the only values used for this projects analysis.
 
-| PunktID | E      | N       | Kommun | Datum      | Temp | Tmedel | Nederbord | RH   | Vindhastighet | Vindriktning | FFMC | DMC | DC    | ISI | BUI | FWI | FWI\_index | HBV\_o | HBV\_u | HBV | HBV\_index | Gras | 
-| ------- | ------ | ------- | ------ | ---------- | ---- | ------ | --------- | ---- | ------------- | ------------ | ---- | --- | ----- | --- | --- | --- | ---------- | ------ | ------ | --- | ---------- | ---- |
-| 14      | 474160 | 6467091 | 509    | 2019-05-23 | 12,2 | 11     | 6,3       | 69,6 | 5             | 204,6        | 45,5 | 2,7 | 145,6 | 0,2 | 5,2 | 0,1 | 1          | 85     | 45     | 87  | 1          | 2    |  
 
 Reported fires data
 ------------
