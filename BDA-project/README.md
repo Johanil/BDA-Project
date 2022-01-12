@@ -1,10 +1,15 @@
 BDA-Project
 ==============================
 
-Big data analytics project to examine if changes in sales of  disposable BBQ-grills have had any  impact on forest fires in Sweden
+This is a big data analytics project to examine if the ban of sales of disposable BBQ-grills when the FWI-index is four or above have had any impact on the forest fires in Sweden. 
 
 Make commands
 ------------
+
+data: Run this make command which preproccess the data and creates all nessecary datasets used for analysis in this project.
+visualize: Run this make command to create plots and tables.
+
+More information about makefiles can be found here: https://www.gnu.org/software/make/manual/make.html (2022-01-12)
 
 Data
 ------------
@@ -33,12 +38,14 @@ Reported fires data
 
 Municipality data
 ---
-The topojson data used in this project was retrieved from the following github repository: https://github.com/deldersveld/topojson/blob/master/countries/sweden/sweden-municipalities.json
-More information about the topojson datatype can be found here: https://github.com/topojson/topojson
+The topojson data used in this project was retrieved from the following github repository: https://github.com/deldersveld/topojson/blob/master/countries/sweden/sweden-municipalities.json (2022-01-12)
+Municipalities in Sweden all have a municipality code, information about what code a certain municipality have can be found here: https://skr.se/skr/tjanster/kommunerochregioner/faktakommunerochregioner/kommunkoder.2052.html
+More information about the topojson datatype can be found here: https://github.com/topojson/topojson (2022-01-12)
 
 Data Access
 ---
-Access to the complete dataset can be retreived by contacting the swedish contingency agency (MSB) and requesting information about
+By contacting the swedish contingency agency (MSB) at the following email: Statistik@MSB.se you can retreive the complete dataset with reported fires. Make sure to request a complete dataset with information about reported fire indicents between 2000-2020 (or later). For access to fire risk data use the same email adress and request information about FWI measurements between the same years.
+Some information can be access through the IDA data portal which is reached at the following adress: https://ida.msb.se/ (2022-01-12)
 
 Other
 ------------
@@ -47,7 +54,7 @@ Project Organization
 ------------
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
+    ├── Makefile           <- Makefile with commands like `make data` or `make visulization`
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── external       <- Data from third party sources.
