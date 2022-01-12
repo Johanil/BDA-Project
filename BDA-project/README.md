@@ -33,9 +33,12 @@ Reported fires data
 
 Municipality data
 ---
+The topojson data used in this project was retrieved from the following github repository: https://github.com/deldersveld/topojson/blob/master/countries/sweden/sweden-municipalities.json
+More information about the topojson datatype can be found here: https://github.com/topojson/topojson
 
 Data Access
 ---
+Access to the complete dataset can be retreived by contacting the swedish contingency agency (MSB) and requesting information about
 
 Other
 ------------
