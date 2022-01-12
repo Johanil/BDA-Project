@@ -41,6 +41,15 @@ https://www.msb.se/contentassets/319560083841487f84dbbad048c84152/brand-fakta.pd
 
 Reported fires data
 ------------
+
+The following is an example of a row from the reported fires dataset, note that  ar, datum, kommun, kommunKortnamn and BEJbrandorsakText are the only values used for this projects analysis.
+
+| ar   | datum     | tid   | kommun | kommunKortNamn | verksamhetText                         | sweref99Norr | sweref99Ost | BEJBbrandorsakText       | areaIProduktivSkogsmark\_m2 | areaIAnnanTradbevuxenMark\_m2 | areaIMarkUtanTrad\_m2 |
+| ---- | --------- | ----- | ------ | -------------- | -------------------------------------- | ------------ | ----------- | ------------------------ | --------------------------- | ----------------------------- | --------------------- |
+| 2010 | 2010-04-14 | 18:18 | 1382   | Falkenberg     | Verksamhet inte knuten till en byggnad | 6306404      | 348526      | Grillning eller lägereld | 0  | 0                             | 4000                  |
+
+The reported fires dataset contains 12 columns, below you'll find an explaination for each of the 5 columns used in this project.
+
 | Column names      | Explaination         |
 | ----------------- | -------------------- |
 | ar                | Year                 |
@@ -48,11 +57,6 @@ Reported fires data
 | kommun            | Municipality code    |
 | kommunKortnamn    | Name of municipality |
 | BEJbrandorsakText | Cause of fire        |
-
-| ar   | datum     | tid   | kommun | kommunKortNamn | verksamhetText                         | sweref99Norr | sweref99Ost | BEJBbrandorsakText       | areaIProduktivSkogsmark\_m2 | areaIAnnanTradbevuxenMark\_m2 | areaIMarkUtanTrad\_m2 |
-| ---- | --------- | ----- | ------ | -------------- | -------------------------------------- | ------------ | ----------- | ------------------------ | --------------------------- | ----------------------------- | --------------------- |
-| 2010 | 2010-04-14 | 18:18 | 1382   | Falkenberg     | Verksamhet inte knuten till en byggnad | 6306404      | 348526      | Grillning eller lägereld | 0  | 0                             | 4000                  |
-
 
 
 Municipality data
