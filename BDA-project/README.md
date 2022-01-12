@@ -67,7 +67,7 @@ More information about the topojson datatype can be found here: https://github.c
 
 Data Access
 ---
-By contacting the swedish contingency agency (MSB) at the following email: Statistik@MSB.se you can retreive the complete dataset with reported fires. Make sure to request a complete dataset with information about reported fire indicents between 2000-2020 (or later). For access to fire risk data use the same email adress and request information about FWI measurements between the same years.
+By contacting the Swedish Civil Contingency Agency (MSB) at the following email: Statistik@MSB.se you can retreive the complete dataset with reported fires. Make sure to request a complete dataset with information about reported fire indicents between 2000-2020 (or later). For access to fire risk data use the same email adress and request information about FWI-measurements between the same years.
 Some information can be access through the IDA data portal if you don't require all datatypes and points used in this project which is reached at the following adress: https://ida.msb.se/ (2022-01-12)
 
 Other
@@ -81,7 +81,7 @@ Project Organization
 ------------
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make visulization`
+    ├── Makefile           <- Makefile with commands like `make data` or `make visualization`
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── external       <- Data from third party sources.
@@ -120,7 +120,7 @@ Project Organization
     │   │   ├── predict_model.py
     │   │   └── train_model.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
+    │   └── visualization  <- Scripts to create exploratory and result oriented visualizations
     │       └── visualize.py
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
