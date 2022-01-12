@@ -13,7 +13,7 @@ More information about makefiles and how they work can be found here: https://ww
 
 Data
 ------------
-Because of the files sizes, the fire risk data set and the reported fires dataset only have sample datasets included. For inofrmation on how to retrieve the complete dataset go to Data Access
+Because of the files sizes, the fire risk data set and the reported fires dataset only have sample datasets included in the repository. For information on how to retrieve the complete datasets go to Data Access.
 
 Fire risk data
 ------------
